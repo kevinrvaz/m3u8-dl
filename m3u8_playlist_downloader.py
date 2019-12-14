@@ -1,12 +1,15 @@
-from threading import Thread, currentThread
+from threading import Thread, currentThread, Lock
 from urllib.parse import urlparse, urljoin
 from pprint import pprint
 from time import sleep
 import requests
+import logging
 import sys
 import os
 
 header = {}
+logging.basicConfig(filename='app.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
+lock = Lock()
 
 def construct_headers():
 	global header
@@ -19,15 +22,31 @@ def construct_headers():
 			temp = line.split(":")
 			if temp[0] and temp[1:]:
 				header[temp[0]] = ":".join(temp[1:]).strip()
-		pprint(header, "press ctrl+c or ctrl+z if parsed headers are incorrect")
-		sleep(10)
+		pprint(header)
+		print("press ctrl+c or ctrl+z if parsed headers are incorrect")
+		try:
+			sleep(10)
+		except:
+			logging.warning("headers incorrectly parsed check construct_headers() function for debugging")
+			sys.exit()
 	else:
 		print("Include headers in a headers.txt file and restart program")
 		sys.exit()
 		
 
 def fetch_data(base_url: str, file_name: str, header: dict):
-	req = requests.get(base_url, headers=header, timeout=60)
+	try:
+		req = requests.get(base_url, headers=header, timeout=60)
+	except:
+		print("Acquiring lock")
+		with lock:
+			logging.error(f"An error occured while fetching {base_url} with thread {currentThread().getName()} retrying...\n")
+			try:
+				req = requests.get(base_url, headers=header, timeout=60)
+			except:
+				logging.error(f"An error occured while fetching {base_url} debug this issue\n")
+				return
+			
 	#print(req)
 	with open(file_name, "wb") as file:
 		file.write(req.content)
@@ -42,9 +61,9 @@ def download_thread(i: int, link: str):
 	fetch_data(link, file_name, header)
 
 def calculate_number_of_threads(num: int) -> int:
-	if num < 100:
+	if num < 50:
 		return num
-	return 100
+	return 50
 
 def initialize_threads(links: list):
 	threads: list = []
@@ -52,9 +71,9 @@ def initialize_threads(links: list):
 	for i in range(len(links)):
 		temp = links[i]
 		t = Thread(target=download_thread, args=(i,temp), name=f"{i} thread")
+		threads.append(t)
+		threads[-1].start()			
 		if i == len(links) - 1:
-			threads.append(t)
-			threads[-1].start()
 			print("Waiting for all threads to complete")
 			for thread in threads:
 				thread.join()
@@ -63,9 +82,6 @@ def initialize_threads(links: list):
 			for thread in threads:
 				thread.join()
 			threads = []
-		else:
-			threads.append(t)
-			threads[-1].start()
 
 	if os.path.exists("video"):
 		os.unlink("video")
@@ -75,16 +91,16 @@ def initialize_threads(links: list):
 		for file in os.listdir():
 			if file.isnumeric():
 				files.append(file)
-		print(files)
-		sleep(10)
 		for file in sorted(files, key=int):
 			print("writing file", file)
 			with open(file, "rb") as movie_chunk: 
 				movie_file.write(movie_chunk.read().strip())
 			os.unlink(file)
+	os.unlink("links.txt")
 
 
 if __name__ == "__main__":
+	print("Logs for the download will be stored in app.log")
 	try:
 		url = sys.argv[1]
 	except:
