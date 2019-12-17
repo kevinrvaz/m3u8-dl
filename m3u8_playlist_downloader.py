@@ -1,9 +1,11 @@
-from concurrent.futures import ThreadPoolExecutor
-from threading import Thread, currentThread, Lock
+from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
+from multiprocessing import cpu_count, current_process
 from urllib.parse import urlparse, urljoin
+from threading import currentThread, Lock
+from traceback import print_exc
 from pprint import pprint
 from time import sleep
-import platform
+import subprocess
 import requests
 import logging
 import sys
@@ -11,10 +13,11 @@ import os
 
 header = {}
 logging.basicConfig(filename='app.log', filemode='w',
-                    format='%(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
+                    format='%(name)s - %(levelname)s - %(message)s', level=logging.ERROR)
 lock = Lock()
 percent_done = 0
 total_content = 0
+THREAD_NUM = cpu_count() * 15
 
 
 def construct_headers():
@@ -33,7 +36,7 @@ def construct_headers():
         try:
             sleep(10)
         except:
-            logging.debug(
+            logging.error(
                 "headers incorrectly parsed check construct_headers() function for debugging")
             sys.exit()
     else:
@@ -41,18 +44,24 @@ def construct_headers():
         sys.exit()
 
 
+def convert_video(video_input, video_output):
+    cmds = ["ffmpeg", "-i", video_input, "-f", "mp4", "-vcodec", "libx264", "-preset",
+            "ultrafast", "-profile:v", "main", "-acodec", "aac", video_output, "-hide_banner"]
+    subprocess.Popen(cmds)
+
+
 def fetch_data(base_url: str, file_name: str, header: dict):
     try:
         req = requests.get(base_url, headers=header, timeout=60)
     except:
-        logging.debug("Acquiring lock")
-        logging.debug(
-            f"An error occured while fetching {base_url} with thread {currentThread().getName()} retrying...\n")
+        # logging.error("Acquiring lock")
+        # logging.error(
+            # f"An error occured while fetching {base_url} with thread {currentThread().getName()} retrying...\n")
         try:
             req = requests.get(base_url, headers=header, timeout=60)
         except:
-            logging.debug(
-                f"An error occured while fetching {base_url} debug this issue\n")
+            # logging.error(
+                # f"An error occured while fetching {base_url} debug this issue\n")
             return
 
     with open(file_name, "wb") as file:
@@ -60,28 +69,45 @@ def fetch_data(base_url: str, file_name: str, header: dict):
 
 
 def download_thread(i: int, link: str):
-    logging.debug(f"starting {currentThread().getName()} for link {link}")
+    # logging.error(f"starting {currentThread().getName()} for link {link}")
     file_name = f"{i}"
     if os.path.exists(file_name):
-        logging.debug(f"file exists {link}")
+        # logging.error(f"file exists {link}")
         return
     fetch_data(link, file_name, header)
-    on_download_thread_complete()
+    # on_download_thread_complete()
 
 
 def calculate_number_of_threads(num: int):
-    if num < 50:
+    if num < THREAD_NUM:
         return num
-    return 50
+    return THREAD_NUM
 
 
-def initialize_threads(links: list):
+def initialize_threads(links: list, start: int):
     thread_number: int = calculate_number_of_threads(total_content)
-
+    print(f"Starting process {current_process().name}")
     with ThreadPoolExecutor(max_workers=thread_number) as executor:
         for i, link in enumerate(links):
-            executor.submit(download_thread, i, link)
+            executor.submit(download_thread, i + start, link)
 
+
+def initialize_parallel_threads(links: list):
+    process_number: int = cpu_count()
+    print("initializing {process_number} processes")
+    with ProcessPoolExecutor(max_workers=process_number) as processes:
+        start = 0
+        for _ in range(total_content):
+            end = start + THREAD_NUM
+            if end > total_content:
+                end = total_content
+            processes.submit(initialize_threads, links[start:end], start)
+            start = end
+            if end == total_content:
+                break
+
+
+def write_file():
     if os.path.exists("video"):
         os.unlink("video")
 
@@ -93,7 +119,7 @@ def initialize_threads(links: list):
             if file.isnumeric():
                 files.append(file)
         for file in sorted(files, key=int):
-            logging.debug(f"writing file {file}")
+            logging.error(f"writing file {file}")
             with open(file, "rb") as movie_chunk:
                 movie_file.write(movie_chunk.read().strip())
             os.unlink(file)
@@ -140,6 +166,9 @@ if __name__ == "__main__":
     # global total_content
     total_content += len(links)
     try:
-        initialize_threads(links)
+        initialize_parallel_threads(links)
+        write_file()
+        if False:
+            convert_video("video", "video.mp4")
     except Exception as err:
-        print(err)
+        print_exc()
