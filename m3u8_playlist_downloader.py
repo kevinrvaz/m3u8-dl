@@ -1,11 +1,13 @@
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 from multiprocessing import cpu_count, current_process
 from urllib.parse import urlparse, urljoin
-from threading import currentThread, Lock
 from traceback import print_exc
+from time import sleep, time
 from pprint import pprint
-from time import sleep
+from random import randint
+import multiprocessing as mp
 import subprocess
+import argparse
 import requests
 import logging
 import sys
@@ -14,10 +16,9 @@ import os
 header = {}
 logging.basicConfig(filename='app.log', filemode='w',
                     format='%(name)s - %(levelname)s - %(message)s', level=logging.ERROR)
-lock = Lock()
-percent_done = 0
+mpLock = mp.Lock()
 total_content = 0
-THREAD_NUM = cpu_count() * 15
+THREAD_NUM = cpu_count()
 
 
 def construct_headers():
@@ -45,23 +46,23 @@ def construct_headers():
 
 
 def convert_video(video_input, video_output):
-    cmds = ["ffmpeg", "-i", video_input, "-f", "mp4", "-vcodec", "libx264", "-preset",
+    # These arguments will be passed in with ffmpeg for video conversion
+    flags = ["ffmpeg", "-i", video_input, "-f", "mp4", "-vcodec", "libx264", "-preset",
             "ultrafast", "-profile:v", "main", "-acodec", "aac", video_output, "-hide_banner"]
-    subprocess.Popen(cmds)
+    subprocess.Popen(flags)
 
 
 def fetch_data(base_url: str, file_name: str, header: dict):
     try:
         req = requests.get(base_url, headers=header, timeout=60)
     except:
-        # logging.error("Acquiring lock")
-        # logging.error(
-            # f"An error occured while fetching {base_url} with thread {currentThread().getName()} retrying...\n")
         try:
+            sleep(randint(10, 30))
             req = requests.get(base_url, headers=header, timeout=60)
         except:
-            # logging.error(
-                # f"An error occured while fetching {base_url} debug this issue\n")
+            with mpLock:
+                with open("error_links.txt", "a") as file:
+                    file.write(f"{base_url}\n")
             return
 
     with open(file_name, "wb") as file:
@@ -69,13 +70,10 @@ def fetch_data(base_url: str, file_name: str, header: dict):
 
 
 def download_thread(i: int, link: str):
-    # logging.error(f"starting {currentThread().getName()} for link {link}")
     file_name = f"{i}"
     if os.path.exists(file_name):
-        # logging.error(f"file exists {link}")
         return
     fetch_data(link, file_name, header)
-    # on_download_thread_complete()
 
 
 def calculate_number_of_threads(num: int):
@@ -93,8 +91,9 @@ def initialize_threads(links: list, start: int):
 
 
 def initialize_parallel_threads(links: list):
+    # No: of processes started depend on the number of cores available
     process_number: int = cpu_count()
-    print("initializing {process_number} processes")
+    print(f"initializing {process_number} processes")
     with ProcessPoolExecutor(max_workers=process_number) as processes:
         start = 0
         for _ in range(total_content):
@@ -107,47 +106,47 @@ def initialize_parallel_threads(links: list):
                 break
 
 
-def write_file():
-    if os.path.exists("video"):
-        os.unlink("video")
+def write_file(name: str):
+    if os.path.exists(name):
+        os.unlink(name)
 
     print("Download complete, writing video file")
 
-    with open("video", "ab") as movie_file:
+    with open(name, "ab") as movie_file:
         files = []
         for file in os.listdir():
             if file.isnumeric():
                 files.append(file)
         for file in sorted(files, key=int):
-            logging.error(f"writing file {file}")
+            print(f"writing file {file}")
             with open(file, "rb") as movie_chunk:
                 movie_file.write(movie_chunk.read().strip())
             os.unlink(file)
     os.unlink("links.txt")
 
 
-def on_download_thread_complete():
-    with lock:
-        global percent_done
-        percent_done += 1
-        # try:
-        #     if platform.system() == "Windows":
-        #         os.system("cls")
-        #     else:
-        #         os.system("clear")
-        # except:
-        #     pass
-        print(f"{(percent_done/total_content) * 100}% done")
-
-
 if __name__ == "__main__":
+    # start the program with -h or --help to get more info on how to use the script
+    parser = argparse.ArgumentParser()
+    parser.add_argument("url", help="Pass in a url containing m3u8 playlist", type=str)
+    parser.add_argument("-n", "--name", type=str, help="Specify a name to save the downloaded video as, if no name is "
+                                                       "specified default name of 'video' will be chosen") 
+    parser.add_argument("-c", "--convert", help="Convert the downloaded video to mp4 using ffmpeg", action="store_true")
+    args = parser.parse_args()
+
     print("Logs for the download will be stored in app.log")
-    try:
-        url = sys.argv[1]
-    except:
+
+    if "url" in args:
+        url = args.url
+    else:
         url = input("Enter a url containing m3u8 playlist\n")
 
+    # This function is responsible for parsing the headers provided in headers.txt
     construct_headers()
+
+    start_time = time()
+
+    # links.txt will contain all the links to be downloaded
     if not os.path.exists("links.txt"):
         req = requests.get(url, headers=header)
 
@@ -160,15 +159,28 @@ if __name__ == "__main__":
 
     parsed_url: str = urlparse(url)
     base_url: str = f"{parsed_url.scheme}://{parsed_url.netloc}{'/'.join(parsed_url.path.split('/')[:-1])}/"
+
+    # construct a links array list contains the links joined with the base_url.
     links: list = [(link if "https" in link else urljoin(base_url, link))
                    for link in temp if "EXT" not in link]
 
-    # global total_content
     total_content += len(links)
     try:
+        # This function is responsible initializing the processes that will make the requests to the links.
         initialize_parallel_threads(links)
-        write_file()
-        if False:
-            convert_video("video", "video.mp4")
+
+        if "name" in args:
+            name = args.name
+        else:
+            name = "video"
+        # This links is responsible for writing video file
+        write_file(name)
+
+        # Begin video conversion if -c or --convert argument is passed in.
+        if args.convert:
+            convert_video(name, f"{name}.mp4")
+
+        elapsed_time = time() - start_time
+        print(f"Elapsed time is {elapsed_time} seconds")
     except Exception as err:
         print_exc()

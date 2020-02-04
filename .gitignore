@@ -129,4 +129,6 @@ dmypy.json
 .pyre/
 
 links.txt
-
+error_links.txt
+video
+video.mp4
