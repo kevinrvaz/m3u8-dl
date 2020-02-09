@@ -39,6 +39,9 @@
       <workItem from="1580831114620" duration="3673000" />
       <workItem from="1581086169538" duration="4885000" />
       <workItem from="1581151764643" duration="7728000" />
+      <workItem from="1581190637722" duration="107000" />
+      <workItem from="1581233208702" duration="7493000" />
+      <workItem from="1581240940717" duration="5655000" />
     </task>
     <servers />
   </component>
@@ -46,10 +49,14 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="647" y="381" key="com.intellij.ide.util.TipDialog" timestamp="1581151765018">
+    <state x="587" y="215" width="800" height="677" key="#Log_Highlighting_(ideolog)" timestamp="1581240956260">
       <screen x="65" y="28" width="1855" height="1052" />
     </state>
-    <state x="647" y="381" key="com.intellij.ide.util.TipDialog/65.28.1855.1052@65.28.1855.1052" timestamp="1581151765018" />
+    <state x="587" y="215" width="800" height="677" key="#Log_Highlighting_(ideolog)/65.28.1855.1052@65.28.1855.1052" timestamp="1581240956260" />
+    <state x="647" y="381" key="com.intellij.ide.util.TipDialog" timestamp="1581240941908">
+      <screen x="65" y="28" width="1855" height="1052" />
+    </state>
+    <state x="647" y="381" key="com.intellij.ide.util.TipDialog/65.28.1855.1052@65.28.1855.1052" timestamp="1581240941908" />
     <state x="527" y="244" width="920" height="620" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1581156937598">
       <screen x="65" y="28" width="1855" height="1052" />
     </state>

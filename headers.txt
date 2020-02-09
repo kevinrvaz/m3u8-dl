@@ -3,7 +3,7 @@ Accept-Encoding: gzip, deflate, br
 Accept-Language: en-US,en;q=0.9
 Connection: keep-alive
 DNT: 1
-Host: hls13x.cdnfile.info
+Host: hls10x.cdnfile.info
 Origin: https://vidstreaming.io
 Referer: https://vidstreaming.io/
 Sec-Fetch-Mode: cors
