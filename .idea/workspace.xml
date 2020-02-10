@@ -22,6 +22,7 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
@@ -41,7 +42,9 @@
       <workItem from="1581151764643" duration="7728000" />
       <workItem from="1581190637722" duration="107000" />
       <workItem from="1581233208702" duration="7493000" />
-      <workItem from="1581240940717" duration="5655000" />
+      <workItem from="1581240940717" duration="6382000" />
+      <workItem from="1581253383852" duration="7752000" />
+      <workItem from="1581264969600" duration="33831000" />
     </task>
     <servers />
   </component>
@@ -53,13 +56,21 @@
       <screen x="65" y="28" width="1855" height="1052" />
     </state>
     <state x="587" y="215" width="800" height="677" key="#Log_Highlighting_(ideolog)/65.28.1855.1052@65.28.1855.1052" timestamp="1581240956260" />
-    <state x="647" y="381" key="com.intellij.ide.util.TipDialog" timestamp="1581240941908">
+    <state width="498" height="446" key="SwitcherDM" timestamp="1581311198033">
       <screen x="65" y="28" width="1855" height="1052" />
     </state>
-    <state x="647" y="381" key="com.intellij.ide.util.TipDialog/65.28.1855.1052@65.28.1855.1052" timestamp="1581240941908" />
-    <state x="527" y="244" width="920" height="620" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1581156937598">
+    <state width="498" height="446" key="SwitcherDM/65.28.1855.1052@65.28.1855.1052" timestamp="1581311198033" />
+    <state x="647" y="381" key="com.intellij.ide.util.TipDialog" timestamp="1581265017142">
       <screen x="65" y="28" width="1855" height="1052" />
     </state>
-    <state x="527" y="244" width="920" height="620" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/65.28.1855.1052@65.28.1855.1052" timestamp="1581156937598" />
+    <state x="647" y="381" key="com.intellij.ide.util.TipDialog/65.28.1855.1052@65.28.1855.1052" timestamp="1581265017141" />
+    <state x="527" y="244" width="920" height="620" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1581279266812">
+      <screen x="65" y="28" width="1855" height="1052" />
+    </state>
+    <state x="527" y="244" width="920" height="620" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/65.28.1855.1052@65.28.1855.1052" timestamp="1581279266812" />
+    <state x="759" y="469" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1581335706437">
+      <screen x="65" y="28" width="1855" height="1052" />
+    </state>
+    <state x="759" y="469" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/65.28.1855.1052@65.28.1855.1052" timestamp="1581335706437" />
   </component>
 </project>

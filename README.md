@@ -2,9 +2,8 @@
 a CLI program to download videos in a m3u8 playlist, write it to a single video file and convert it to mp4 using ffmpeg 
 
 ## Dependencies
-- Requests module, install using `pip install requests`<br>
+- Install python external modules using `pip install -r requirements.txt` after activating virtualenv<br>
 - FFMPEG for video conversion, visit https://www.ffmpeg.org/download.html<br>
-- PyInstaller for building executable, install using `pip install pyinstaller`<br>
 
 ## Usage without installation
 - create a virtual environment using `virtualenv -p python3.6 venv` in terminal<br/>

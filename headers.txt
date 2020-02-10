@@ -1,11 +1,14 @@
-Accept: */*
-Accept-Encoding: gzip, deflate, br
-Accept-Language: en-US,en;q=0.9
-Connection: keep-alive
-DNT: 1
-Host: hls10x.cdnfile.info
-Origin: https://vidstreaming.io
-Referer: https://vidstreaming.io/
-Sec-Fetch-Mode: cors
-Sec-Fetch-Site: cross-site
-User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36
+:authority: azdwy.mcloud.to
+:method: GET
+:path: /21/a06d0f7786ec99a2/60738061c96542ff3dbb1fd5d85507acf851986c6967a5cf842c9a51d6b4a5734e72172f2c9dbd6343b8f6862b3a56c828c764d12a1b251f012bf6f10e8396890330284ba8f013d2dee01a76fa580c7f831d7c736c187e3516e76f828c7b9b85/hls/480/480.m3u8
+:scheme: https
+accept: */*
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.9
+cookie: _ga=GA1.2.1183249556.1580579348
+dnt: 1
+origin: https://mcloud.to
+referer: https://mcloud.to/embed/827q1v?key=05dce144ac926ff30ae19378e90dbe5b&site=gogoanime
+sec-fetch-mode: cors
+sec-fetch-site: same-site
+user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36
