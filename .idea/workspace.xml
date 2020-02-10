@@ -2,9 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b9df719f-adfc-42fb-9e8a-e0d724354e83" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/headers.txt" beforeDir="false" afterPath="$PROJECT_DIR$/headers.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/m3u8_playlist_downloader.py" beforeDir="false" afterPath="$PROJECT_DIR$/m3u8_playlist_downloader.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -44,7 +41,7 @@
       <workItem from="1581233208702" duration="7493000" />
       <workItem from="1581240940717" duration="6382000" />
       <workItem from="1581253383852" duration="7752000" />
-      <workItem from="1581264969600" duration="33831000" />
+      <workItem from="1581264969600" duration="34198000" />
     </task>
     <servers />
   </component>

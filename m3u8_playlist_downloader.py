@@ -196,7 +196,7 @@ def write_file(video_file: str, session: requests.Session):
             print("Writing file", file)
             with open(os.path.join(TEMP_FOLDER, file), "rb") as movie_chunk:
                 movie_file.write(movie_chunk.read().strip())
-            # os.unlink(os.path.join(TEMP_FOLDER, file))
+            os.unlink(os.path.join(TEMP_FOLDER, file))
 
     os.unlink("links.txt")
     os.rmdir(TEMP_FOLDER)
