@@ -15,8 +15,9 @@ a CLI program to download videos in a m3u8 playlist, write it to a single video 
 ## Installing/Uninstalling
 for installation in ubuntu using PyInstaller:-
 - activate virtualenv using `source venv/bin/activate`
-- run `pyinstaller m3u8_playlist_downloader.py --name m3u8-dl --onefile --hidden-import=requests` in terminal.
-- run `sudo mv dist/m3u8-dl /usr/local/bin` in terminal window.
+- run `pyinstaller m3u8_playlist_downloader.py --name m3u8-dl --onefile -p venv/lib/python3.6/site-packages/
+` in terminal.
+- run `sudo mv dist/m3u8-dl /usr/local/bin/` in terminal window.
 - now that the program is installed globally you can start the program using `m3u8-dl` in the terminal
 
 for uninstall in ubuntu:-
