@@ -1,5 +1,6 @@
 from multiprocessing import cpu_count, current_process, Manager, Pipe, Process
-from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor, Future
+from typing import Optional, List, Dict, ByteString
 from urllib.parse import urlparse, urljoin
 from requests.adapters import HTTPAdapter
 from threading import Lock as threadLock
@@ -16,37 +17,37 @@ import logging
 import sys
 import os
 
-header = {}
-links_file_map = {}
+header: Dict[str, str] = {}
+links_file_map: Dict[str, str] = {}
 logging.basicConfig(filename='app.log', filemode='w',
                     format='%(name)s - %(levelname)s - %(message)s', level=logging.ERROR)
-mpLock = Manager().Lock()
-tLock = threadLock()
-total_content = 0
-BASE_URL = ""
-THREAD_NUM = (cpu_count() or 4)
+mpLock: threadLock = Manager().Lock()
+tLock: threadLock = threadLock()
+total_content: int = 0
+BASE_URL: str = ""
+THREAD_NUM: int = (cpu_count() or 4)
 
 # All unparsed requests content will be stored in this temporary hidden folder
 TEMP_FOLDER = ".asdalkshdalskdhalsdhaslk12313123asdllcvsd"
 
 # HTTP/1.1 adapter
-ADAPTER1 = HTTPAdapter(max_retries=5)
+ADAPTER1: HTTPAdapter = HTTPAdapter(max_retries=5)
 
 # HTTP/2 adapter
-ADAPTER2 = HTTP20Adapter(max_retries=10)
+ADAPTER2: HTTP20Adapter = HTTP20Adapter(max_retries=10)
 
-TOTAL_LINKS = 0
-MAX_RETRIES = 5
-TOTAL_RETRIES = 5
+TOTAL_LINKS: int = 0
+MAX_RETRIES: int = 5
+TOTAL_RETRIES: int = 5
 
 # If HTTP/2 is set to True all requests will be made through HTTP/2 otherwise HTTP/1.1
-HTTP2 = False
+HTTP2: bool = False
 
 # Request timeout
-timeout = 100
+timeout: int = 100
 
 # error links
-error_download_links = []
+error_download_links: List[str] = []
 
 
 class GraphNode:
@@ -82,17 +83,17 @@ class GraphNode:
 
 
 class Graph:
-    def __init__(self, number_of_nodes: int, nodes: list):
-        self.size = number_of_nodes
-        self.data_list = nodes
-        self.nodes = {k: GraphNode(k) for k in nodes}
-        self.file_meta_data = {}
+    def __init__(self, number_of_nodes: int, nodes: List[str]):
+        self.size: int = number_of_nodes
+        self.data_list: List[str] = nodes
+        self.nodes: Dict[str, GraphNode] = {k: GraphNode(k) for k in nodes}
+        self.file_meta_data: Dict[str, float] = {}
         self.construct()
 
     def construct(self):
-        visited = {}
+        visited: Dict[str, ByteString] = {}
 
-        def generate_file_metadata(current_file):
+        def generate_file_metadata(current_file) -> ByteString:
             with open(os.path.join(TEMP_FOLDER, current_file), "rb") as data_file:
                 file_data = data_file.read().strip()
             visited[current_file] = file_data
@@ -132,7 +133,7 @@ class Graph:
         return str(self.nodes.values())
 
 
-def directory_validator(string):
+def directory_validator(string: str) -> str:
     # This code is used to check if passed in headers_path string is valid path to a file
     # if not FileNotFoundError is raised
     if os.path.isfile(string):
@@ -140,8 +141,9 @@ def directory_validator(string):
     raise FileNotFoundError(f"{string} does not point to a file")
 
 
-def construct_headers(header_path: str):
+def construct_headers(header_path: str) -> Dict[str, str]:
     global header, HTTP2
+    header: Dict[str, str] = {}
     print("Parsed Request headers\n")
     if os.path.exists(header_path):
         with open(header_path) as file:
@@ -159,27 +161,31 @@ def construct_headers(header_path: str):
                 temp = line.split(":")
                 if temp[0] and temp[1:]:
                     header[temp[0]] = ":".join(temp[1:]).strip()
+        if "cookie" in header:
+            del header["cookie"]
         pprint(header)
         print("press ctrl+c or ctrl+z if parsed headers are incorrect")
         try:
             sleep(10)
-        except:
+        except KeyboardInterrupt:
             logging.error(
                 "headers incorrectly parsed check construct_headers() function for debugging")
             sys.exit()
     else:
         print(f"Include headers in {header_path} directory and restart program")
         sys.exit()
+    return header
 
 
-def convert_video(video_input: str, video_output: str):
+def convert_video(video_input: str, video_output: str) -> None:
     # These arguments will be passed in with ffmpeg for video conversion
     flags = ["ffmpeg", "-i", f"{video_input}.ts", "-acodec", "copy", "-vcodec", "copy", video_output]
     subprocess.Popen(flags).wait()
     os.unlink(f"{video_input}.ts")
 
 
-def fetch_data(download_url: str, file_name: str, headers: dict, session: requests.Session):
+# noinspection PyBroadException
+def fetch_data(download_url: str, file_name: str, headers: dict, session: requests.Session) -> Optional[str]:
     try:
         global timeout
         if HTTP2:
@@ -204,45 +210,44 @@ def fetch_data(download_url: str, file_name: str, headers: dict, session: reques
     return None
 
 
-def download_thread(file_name_maps: dict, link: str, session: requests.Session):
+def download_thread(file_name_maps: dict, link: str, session: requests.Session) -> Optional[str]:
     file_name = file_name_maps[link.split("/")[-1]]
     if os.path.exists(os.path.join(TEMP_FOLDER, file_name)):
         return None
     return fetch_data(link, file_name, header, session)
 
 
-def calculate_number_of_threads(num: int):
-    if num < THREAD_NUM:
-        return num
-    return THREAD_NUM
+def initialize_threads(links: List[str], session: requests.Session, link_maps: dict) -> List[str]:
+    def calculate_number_of_threads(num: int) -> int:
+        if num < THREAD_NUM:
+            return num
+        return THREAD_NUM
 
-
-def initialize_threads(links: list, session: requests.Session, link_maps: dict):
     thread_number: int = calculate_number_of_threads(total_content)
     print(f"Starting process {current_process().name}")
     try:
-        failed_links = []
+        failed_links: List[str] = []
 
-        def update_failed_links(future):
+        def update_failed_links(future: Future) -> None:
             temp = future.result()
             if temp:
                 with tLock:
                     failed_links.append(temp)
 
-        error_links = []
+        thread_futures: List[Future[Optional[str]]] = []
         with ThreadPoolExecutor(max_workers=thread_number) as executor:
             for link in links:
-                error_links.append(executor.submit(download_thread, link_maps.copy(), link, session))
-                error_links[-1].add_done_callback(update_failed_links)
+                thread_futures.append(executor.submit(download_thread, link_maps.copy(), link, session))
+                thread_futures[-1].add_done_callback(update_failed_links)
 
         return failed_links
     except KeyboardInterrupt:
         sys.exit()
 
 
-def initialize_parallel_threads(links: list, session: requests.Session):
+def initialize_parallel_threads(links: List[str], session: requests.Session) -> None:
     global error_download_links
-    error_download_links = []
+    error_download_links: List[str] = []
 
     if os.path.exists("error_links.txt"):
         os.unlink("error_links.txt")
@@ -253,23 +258,23 @@ def initialize_parallel_threads(links: list, session: requests.Session):
     process_number: int = (cpu_count() or 4) * 2
     print(f"initializing {process_number} processes for {total_content} links")
 
-    def update_failed_links(future):
+    def update_failed_links(future: Future) -> None:
         temp = future.result()
         if temp:
             with mpLock:
                 error_download_links.extend(temp)
 
-    failed_links = []
-    with ProcessPoolExecutor(max_workers=process_number) as processes:
+    process_futures: List[Future[List[str]]] = []
+    with ProcessPoolExecutor(max_workers=process_number) as pool_executor:
         start = 0
         for _ in range(total_content):
             end = start + THREAD_NUM
             if end > total_content:
                 end = total_content
-            failed_links.append(processes.submit(initialize_threads,
-                                                 links[start:end].copy(),
-                                                 session, links_file_map.copy()))
-            failed_links[-1].add_done_callback(update_failed_links)
+            process_futures.append(pool_executor.submit(initialize_threads,
+                                                        links[start:end].copy(),
+                                                        session, links_file_map.copy()))
+            process_futures[-1].add_done_callback(update_failed_links)
             start = end
             if end == total_content:
                 break
@@ -280,12 +285,12 @@ def initialize_parallel_threads(links: list, session: requests.Session):
                 file.write(f"{link}\n")
 
 
-def concat_all_ts(files: list, video_file: str):
-    graph = Graph(len(files), files)
-    non_duplicates = []
-    visited = {}
+def concat_all_ts(files: List[str], video_file: str) -> None:
+    graph: Graph = Graph(len(files), files)
+    non_duplicates: List[str] = []
+    visited: Dict[str, int] = {}
 
-    def remove(val):
+    def remove(val) -> bool:
         if type(val) == int:
             val = str(val)
         if val in visited:
@@ -308,8 +313,8 @@ def concat_all_ts(files: list, video_file: str):
     os.unlink("ts_list.txt")
 
 
-def write_file(video_file: str, session: requests.Session):
-    files = []
+def write_file(video_file: str, session: requests.Session) -> None:
+    files: List[str] = []
     for file in os.listdir(TEMP_FOLDER):
         if file.isnumeric():
             files.append(file)
@@ -328,7 +333,7 @@ def write_file(video_file: str, session: requests.Session):
             temp = [line.strip() for line in file.readlines()]
 
         shuffle(temp)
-        error_links = temp.copy()
+        error_links: List[str] = temp.copy()
         global total_content
         total_content = len(error_links)
         print(f"Some download chunks are missing attempting retry {TOTAL_RETRIES - MAX_RETRIES}")
@@ -342,7 +347,7 @@ def write_file(video_file: str, session: requests.Session):
     rmtree(TEMP_FOLDER)
 
 
-def main(args: argparse.Namespace):
+def main(args: argparse.Namespace) -> None:
     global TOTAL_RETRIES, MAX_RETRIES, BASE_URL, TOTAL_LINKS, total_content
     print("Logs for the download will be stored in app.log")
 
@@ -363,7 +368,7 @@ def main(args: argparse.Namespace):
     start_time = time()
 
     # Mount new connection adapters to the session created.
-    sess = requests.Session()
+    sess: requests.Session = requests.Session()
     parsed_prefix = "/".join(url.split("/")[:-1])
     sess.mount(parsed_prefix, ADAPTER1)
     if HTTP2:
@@ -371,7 +376,7 @@ def main(args: argparse.Namespace):
         sess.mount(parsed_prefix, ADAPTER2)
 
     # Fetching m3u8 playlist from url.
-    req = sess.get(url, headers=header, timeout=60)
+    req: requests.Response = sess.get(url, headers=header, timeout=60)
 
     # links.txt will contain all the links to be downloaded.
     with open("links.txt", "wb") as file:
@@ -383,13 +388,13 @@ def main(args: argparse.Namespace):
 
     parsed_url = urlparse(url)
     base_url: str = f"{parsed_url.scheme}://{parsed_url.netloc}{'/'.join(parsed_url.path.split('/')[:-1])}/"
-    BASE_URL = base_url
+    BASE_URL: str = base_url
 
     # Construct a links list containing the links joined with the base_url.
     # If the link in the m3u8 playlist is already a full link we add that to the result `links list`
     # else we join the base_url with the link partial in the playlist and add that to the `links list`
-    links: list = [(link if "https" in link else urljoin(base_url, link))
-                   for link in temp if "EXT" not in link]
+    links: List[str] = [(link if "https" in link else urljoin(base_url, link))
+                        for link in temp if "EXT" not in link]
 
     # Construct links to file name mappings
     for file_name, link in enumerate(links):
@@ -452,8 +457,8 @@ if __name__ == "__main__":
     main_process = Process(target=main, args=(cli_args,))
     main_process.start()
 
-    convert_videos_process = Process(target=convert_videos_process_fn)
-    convert_videos_process.start()
+    # convert_videos_process = Process(target=convert_videos_process_fn)
+    # convert_videos_process.start()
 
     main_process.join()
-    convert_videos_process.join()
+    # convert_videos_process.join()
