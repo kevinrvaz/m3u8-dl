@@ -1,6 +1,6 @@
-:authority: azdwy.mcloud.to
+:authority: bzgvd.mcloud.to
 :method: GET
-:path: /21/a06d0f7786ec99a2/60738061c96542ff3dbb1fd5d85507acf851986c6967a5cf842c9a51d6b4a5734e72172f2c9dbd6343b8f6862b3a56c828c764d12a1b251f012bf6f10e8396890330284ba8f013d2dee01a76fa580c7f831d7c736c187e3516e76f828c7b9b85/hls/480/480.m3u8
+:path: /30/6a7b48c17e7776d1/a069b297fb3842ee5ce5379d701828b20345d85975a14b5af9009e0435c8ff472faf4c7bdf1b32de4810bb6629a51f3a6f757ed7081bbdda097036dc6d26e7d57c98f4e65b0fea82a43bf242de152b2346e90b8bc979364bac2964dcd27e9a92/hls/480/480.m3u8
 :scheme: https
 accept: */*
 accept-encoding: gzip, deflate, br
@@ -8,7 +8,8 @@ accept-language: en-US,en;q=0.9
 cookie: _ga=GA1.2.1183249556.1580579348
 dnt: 1
 origin: https://mcloud.to
-referer: https://mcloud.to/embed/827q1v?key=05dce144ac926ff30ae19378e90dbe5b&site=gogoanime
+referer: https://mcloud.to/embed/827q1v?key=01cb066a3af6203063aca3bb9bb1b0c5&site=gogoanime
+sec-fetch-dest: empty
 sec-fetch-mode: cors
 sec-fetch-site: same-site
-user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36
+user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.87 Safari/537.36

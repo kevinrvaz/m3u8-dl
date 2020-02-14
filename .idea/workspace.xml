@@ -2,6 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b9df719f-adfc-42fb-9e8a-e0d724354e83" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vscode/settings.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/headers.txt" beforeDir="false" afterPath="$PROJECT_DIR$/headers.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/m3u8_playlist_downloader.py" beforeDir="false" afterPath="$PROJECT_DIR$/m3u8_playlist_downloader.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -24,6 +27,11 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/core" />
+    </key>
+  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -41,7 +49,11 @@
       <workItem from="1581233208702" duration="7493000" />
       <workItem from="1581240940717" duration="6382000" />
       <workItem from="1581253383852" duration="7752000" />
-      <workItem from="1581264969600" duration="34198000" />
+      <workItem from="1581264969600" duration="34547000" />
+      <workItem from="1581345257804" duration="351000" />
+      <workItem from="1581404663407" duration="4282000" />
+      <workItem from="1581585964512" duration="4476000" />
+      <workItem from="1581598169484" duration="34159000" />
     </task>
     <servers />
   </component>
@@ -53,14 +65,18 @@
       <screen x="65" y="28" width="1855" height="1052" />
     </state>
     <state x="587" y="215" width="800" height="677" key="#Log_Highlighting_(ideolog)/65.28.1855.1052@65.28.1855.1052" timestamp="1581240956260" />
-    <state width="498" height="446" key="SwitcherDM" timestamp="1581311198033">
+    <state x="800" y="273" width="374" height="562" key="#com.intellij.ide.util.MemberChooser" timestamp="1581659944589">
       <screen x="65" y="28" width="1855" height="1052" />
     </state>
-    <state width="498" height="446" key="SwitcherDM/65.28.1855.1052@65.28.1855.1052" timestamp="1581311198033" />
-    <state x="647" y="381" key="com.intellij.ide.util.TipDialog" timestamp="1581265017142">
+    <state x="800" y="273" width="374" height="562" key="#com.intellij.ide.util.MemberChooser/65.28.1855.1052@65.28.1855.1052" timestamp="1581659944589" />
+    <state width="498" height="446" key="SwitcherDM" timestamp="1581598830423">
       <screen x="65" y="28" width="1855" height="1052" />
     </state>
-    <state x="647" y="381" key="com.intellij.ide.util.TipDialog/65.28.1855.1052@65.28.1855.1052" timestamp="1581265017141" />
+    <state width="498" height="446" key="SwitcherDM/65.28.1855.1052@65.28.1855.1052" timestamp="1581598830423" />
+    <state x="647" y="381" key="com.intellij.ide.util.TipDialog" timestamp="1581598171020">
+      <screen x="65" y="28" width="1855" height="1052" />
+    </state>
+    <state x="647" y="381" key="com.intellij.ide.util.TipDialog/65.28.1855.1052@65.28.1855.1052" timestamp="1581598171020" />
     <state x="527" y="244" width="920" height="620" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1581279266812">
       <screen x="65" y="28" width="1855" height="1052" />
     </state>

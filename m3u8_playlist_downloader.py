@@ -1,10 +1,11 @@
+from multiprocessing import cpu_count, current_process, Manager, Pipe, Process
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
-from multiprocessing import cpu_count, current_process, Manager
 from traceback import print_exc, format_exc
 from urllib.parse import urlparse, urljoin
 from requests.adapters import HTTPAdapter
 from threading import Lock as threadLock
 from hyper.contrib import HTTP20Adapter
+from shutil import rmtree
 from time import sleep, time
 from pprint import pprint
 import subprocess
@@ -42,6 +43,89 @@ HTTP2 = False
 
 # Request timeout
 timeout = 5
+
+
+class GraphNode:
+    def __init__(self, data):
+        self.data = data
+        self.adjacent_nodes = {}
+
+    def add_edge(self, data):
+        self.adjacent_nodes[data] = 1
+
+    def remove_edge(self, data):
+        if data in self.adjacent_nodes:
+            del self.adjacent_nodes[data]
+
+    def __len__(self):
+        return len(self.adjacent_nodes)
+
+    def __iter__(self):
+        for node in self.adjacent_nodes:
+            yield node
+
+    def __add__(self, other):
+        res = [self.data]
+        for key in other:
+            res.append(key)
+        return res
+
+    def __repr__(self):
+        return f"{self.data}--->{self.adjacent_nodes}\n"
+
+    def __str__(self):
+        return f"{self.data}--->{self.adjacent_nodes}\n"
+
+
+class Graph:
+    def __init__(self, number_of_nodes: int, nodes: list):
+        self.size = number_of_nodes
+        self.data_list = nodes
+        self.nodes = {k: GraphNode(k) for k in nodes}
+        self.file_meta_data = {}
+        self.construct()
+
+    def construct(self):
+        visited = {}
+
+        def generate_file_metadata(current_file):
+            with open(os.path.join(TEMP_FOLDER, current_file), "rb") as data_file:
+                file_data = data_file.read().strip()
+            visited[current_file] = file_data
+            cmd = "ffprobe {} -show_entries format=start_time -v quiet -of csv='p=0'" \
+                .format(os.path.join(TEMP_FOLDER, current_file))
+            ts_time_stamp = subprocess.check_output(cmd, shell=True)
+            self.file_meta_data[current_file] = float(ts_time_stamp.decode("utf-8").strip())
+            return file_data
+
+        for index, data in enumerate(self.data_list):
+            if data in visited:
+                current_data = visited[data]
+            else:
+                current_data = generate_file_metadata(data)
+            for node in self.data_list[index:]:
+                if node in visited:
+                    node_data = visited[node]
+                else:
+                    node_data = generate_file_metadata(node)
+                if current_data == node_data and node != data \
+                        and self.file_meta_data[data] == self.file_meta_data[node]:
+                    self.nodes[node].add_edge(data)
+                    self.nodes[data].add_edge(node)
+        del visited
+
+    def __getitem__(self, key):
+        return self.nodes[key]
+
+    def __len__(self):
+        return len(self.nodes)
+
+    def __iter__(self):
+        for node, val in self.nodes.items():
+            yield node, val
+
+    def __repr__(self):
+        return str(self.nodes.values())
 
 
 def directory_validator(string):
@@ -86,11 +170,9 @@ def construct_headers(header_path: str):
 
 def convert_video(video_input: str, video_output: str):
     # These arguments will be passed in with ffmpeg for video conversion
-    flags = ["ffmpeg", "-i", video_input, "-f", "mp4", "-vcodec", "libx264", "-preset",
-             "ultrafast", "-profile:v", "main", "-acodec", "aac", video_output, "-hide_banner"]
-    process = subprocess.Popen(flags)
-    process.wait()
-    os.unlink(video_input)
+    flags = ["ffmpeg", "-i", f"{video_input}.ts", "-acodec", "copy", "-vcodec", "copy", video_output]
+    subprocess.Popen(flags).wait()
+    os.unlink(f"{video_input}.ts")
 
 
 def fetch_data(download_url: str, file_name: str, headers: dict, session: requests.Session):
@@ -106,11 +188,11 @@ def fetch_data(download_url: str, file_name: str, headers: dict, session: reques
             if "connections" not in vars(temp_adapter):
                 temp_adapter.__init__()
         request_data = session.get(download_url, headers=headers, timeout=timeout)
-    except Exception:
+    except Exception as err:
         with mpLock:
             with tLock:
-                logging.error(f"{download_url} will be retried later")
-                logging.error(str(format_exc()))
+                logging.error(f"{download_url} will be retried later, {file_name}, error occured {err}")
+                logging.error("")
                 with open("error_links.txt", "a") as error_link_file:
                     error_link_file.write(f"{download_url}\n")
                 return
@@ -121,7 +203,7 @@ def fetch_data(download_url: str, file_name: str, headers: dict, session: reques
 
 
 def download_thread(file_name_maps: dict, link: str, session: requests.Session):
-    file_name = file_name_maps[link]
+    file_name = file_name_maps[link.split("/")[-1]]
     if os.path.exists(os.path.join(TEMP_FOLDER, file_name)):
         return
     fetch_data(link, file_name, header, session)
@@ -136,16 +218,18 @@ def calculate_number_of_threads(num: int):
 def initialize_threads(links: list, session: requests.Session, link_maps: dict):
     thread_number: int = calculate_number_of_threads(total_content)
     print(f"Starting process {current_process().name}")
-    with ThreadPoolExecutor(max_workers=thread_number) as executor:
-        for link in links:
-            executor.submit(download_thread, link_maps, link, session)
+    try:
+        with ThreadPoolExecutor(max_workers=thread_number) as executor:
+            for link in links:
+                executor.submit(download_thread, link_maps.copy(), link, session)
+    except KeyboardInterrupt:
+        sys.exit()
 
 
 def initialize_parallel_threads(links: list, session: requests.Session):
     if os.path.exists("error_links.txt"):
         os.unlink("error_links.txt")
 
-    global total_content
     os.makedirs(TEMP_FOLDER, exist_ok=True)
 
     # No: of processes started depend on the number of cores available.
@@ -162,6 +246,34 @@ def initialize_parallel_threads(links: list, session: requests.Session):
             start = end
             if end == total_content:
                 break
+
+
+def concat_all_ts(files: list, video_file: str):
+    graph = Graph(len(files), files)
+    non_duplicates = []
+    visited = {}
+
+    def remove(val):
+        if type(val) == int:
+            val = str(val)
+        if val in visited:
+            return False
+        visited[val] = 1
+        return True
+
+    for node, adjacent_nodes in graph:
+        try:
+            non_duplicates.append(min(list(filter(remove, graph.nodes[node] + adjacent_nodes))))
+        except ValueError:
+            pass
+
+    with open("ts_list.txt", "w") as file:
+        for file_name in sorted(non_duplicates, key=lambda f: graph.file_meta_data[f]):
+            file.write(f"file '{TEMP_FOLDER}/{file_name}'\n")
+
+    subprocess.Popen(["ffmpeg", "-f", "concat", "-safe", "0", "-i",
+                      "ts_list.txt", "-c", "copy", f"{video_file}.ts"]).wait()
+    os.unlink("ts_list.txt")
 
 
 def write_file(video_file: str, session: requests.Session):
@@ -191,33 +303,13 @@ def write_file(video_file: str, session: requests.Session):
 
     print("Download complete, writing video file")
 
-    with open(video_file, "ab") as movie_file:
-        for file in sorted(files, key=int):
-            print("Writing file", file)
-            with open(os.path.join(TEMP_FOLDER, file), "rb") as movie_chunk:
-                movie_file.write(movie_chunk.read().strip())
-            os.unlink(os.path.join(TEMP_FOLDER, file))
-
+    concat_all_ts(files, video_file)
     os.unlink("links.txt")
-    os.rmdir(TEMP_FOLDER)
+    rmtree(TEMP_FOLDER)
 
 
-if __name__ == "__main__":
-    # start the program with -h or --help to get more info on how to use the script.
-    parser = argparse.ArgumentParser()
-    parser.add_argument("url", help="Pass in a url containing m3u8 playlist", type=str)
-    parser.add_argument("-n", "--name", type=str, help="Specify a name to save the downloaded video as, if no name is "
-                                                       "specified default name of 'video' will be chosen")
-    parser.add_argument("-p", "--header-path", type=directory_validator,
-                        help="Specify the path to the file containing headers, if no path is specified the program "
-                             "will look for a headers.txt file in the same directory")
-    parser.add_argument("-r", "--retry", type=int, help="Specify number of retries by default 5 retries will be "
-                                                        "initiated")
-    parser.add_argument("-f", "--force", action="store_true", help="If this flag is used and the video has been "
-                                                                   "downloaded the download will restart")
-    parser.add_argument("-c", "--convert", help="Convert the downloaded video to mp4 using ffmpeg", action="store_true")
-    args = parser.parse_args()
-
+def main(args: argparse.Namespace):
+    global TOTAL_RETRIES, MAX_RETRIES, BASE_URL, TOTAL_LINKS, total_content
     print("Logs for the download will be stored in app.log")
 
     url = args.url
@@ -267,7 +359,7 @@ if __name__ == "__main__":
 
     # Construct links to file name mappings
     for file_name, link in enumerate(links):
-        links_file_map[link] = str(file_name)
+        links_file_map[link.split("/")[-1]] = str(file_name)
 
     total_content += len(links)
     TOTAL_LINKS = len(links)
@@ -299,3 +391,33 @@ if __name__ == "__main__":
         logging.error(err)
         print_exc()
         sys.exit()
+
+
+def convert_videos_process_fn():
+    pass
+
+
+if __name__ == "__main__":
+    # start the program with -h or --help to get more info on how to use the script.
+    parser = argparse.ArgumentParser()
+    parser.add_argument("url", help="Pass in a url containing m3u8 playlist", type=str)
+    parser.add_argument("-n", "--name", type=str, help="Specify a name to save the downloaded video as, if no name is "
+                                                       "specified default name of 'video' will be chosen")
+    parser.add_argument("-p", "--header-path", type=directory_validator,
+                        help="Specify the path to the file containing headers, if no path is specified the program "
+                             "will look for a headers.txt file in the same directory")
+    parser.add_argument("-r", "--retry", type=int, help="Specify number of retries by default 5 retries will be "
+                                                        "initiated")
+    parser.add_argument("-f", "--force", action="store_true", help="If this flag is used and the video has been "
+                                                                   "downloaded the download will restart")
+    parser.add_argument("-c", "--convert", help="Convert the downloaded video to mp4 using ffmpeg", action="store_true")
+    cli_args = parser.parse_args()
+
+    main_process = Process(target=main, args=(cli_args,))
+    main_process.start()
+
+    convert_videos_process = Process(target=convert_videos_process_fn)
+    convert_videos_process.start()
+
+    main_process.join()
+    convert_videos_process.join()
