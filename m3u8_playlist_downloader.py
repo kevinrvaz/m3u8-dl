@@ -1,13 +1,14 @@
 from multiprocessing import cpu_count, current_process, Manager, Pipe, Process
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
-from traceback import print_exc, format_exc
 from urllib.parse import urlparse, urljoin
 from requests.adapters import HTTPAdapter
 from threading import Lock as threadLock
 from hyper.contrib import HTTP20Adapter
-from shutil import rmtree
 from time import sleep, time
+from traceback import print_exc
+from shutil import rmtree
 from pprint import pprint
+from random import shuffle
 import subprocess
 import argparse
 import requests
@@ -23,7 +24,7 @@ mpLock = Manager().Lock()
 tLock = threadLock()
 total_content = 0
 BASE_URL = ""
-THREAD_NUM = cpu_count()
+THREAD_NUM = (cpu_count() or 4)
 
 # All unparsed requests content will be stored in this temporary hidden folder
 TEMP_FOLDER = ".asdalkshdalskdhalsdhaslk12313123asdllcvsd"
@@ -32,7 +33,7 @@ TEMP_FOLDER = ".asdalkshdalskdhalsdhaslk12313123asdllcvsd"
 ADAPTER1 = HTTPAdapter(max_retries=5)
 
 # HTTP/2 adapter
-ADAPTER2 = HTTP20Adapter(max_retries=5)
+ADAPTER2 = HTTP20Adapter(max_retries=10)
 
 TOTAL_LINKS = 0
 MAX_RETRIES = 5
@@ -42,7 +43,10 @@ TOTAL_RETRIES = 5
 HTTP2 = False
 
 # Request timeout
-timeout = 5
+timeout = 100
+
+# error links
+error_download_links = []
 
 
 class GraphNode:
@@ -177,7 +181,9 @@ def convert_video(video_input: str, video_output: str):
 
 def fetch_data(download_url: str, file_name: str, headers: dict, session: requests.Session):
     try:
+        global timeout
         if HTTP2:
+            timeout += 500
             if ":path" in headers:
                 parsed_url_path = urlparse(download_url).path
                 headers[":path"] = parsed_url_path
@@ -187,26 +193,22 @@ def fetch_data(download_url: str, file_name: str, headers: dict, session: reques
             temp_adapter = session.get_adapter(download_url)
             if "connections" not in vars(temp_adapter):
                 temp_adapter.__init__()
+
         request_data = session.get(download_url, headers=headers, timeout=timeout)
-    except Exception as err:
-        with mpLock:
-            with tLock:
-                logging.error(f"{download_url} will be retried later, {file_name}, error occured {err}")
-                logging.error("")
-                with open("error_links.txt", "a") as error_link_file:
-                    error_link_file.write(f"{download_url}\n")
-                return
+    except Exception:
+        return download_url
 
     temp_path = os.path.join(TEMP_FOLDER, file_name)
     with open(temp_path, "wb") as video_file:
-        video_file.write(request_data.content)
+        video_file.write(request_data.content.strip())
+    return None
 
 
 def download_thread(file_name_maps: dict, link: str, session: requests.Session):
     file_name = file_name_maps[link.split("/")[-1]]
     if os.path.exists(os.path.join(TEMP_FOLDER, file_name)):
-        return
-    fetch_data(link, file_name, header, session)
+        return None
+    return fetch_data(link, file_name, header, session)
 
 
 def calculate_number_of_threads(num: int):
@@ -219,33 +221,63 @@ def initialize_threads(links: list, session: requests.Session, link_maps: dict):
     thread_number: int = calculate_number_of_threads(total_content)
     print(f"Starting process {current_process().name}")
     try:
+        failed_links = []
+
+        def update_failed_links(future):
+            temp = future.result()
+            if temp:
+                with tLock:
+                    failed_links.append(temp)
+
+        error_links = []
         with ThreadPoolExecutor(max_workers=thread_number) as executor:
             for link in links:
-                executor.submit(download_thread, link_maps.copy(), link, session)
+                error_links.append(executor.submit(download_thread, link_maps.copy(), link, session))
+                error_links[-1].add_done_callback(update_failed_links)
+
+        return failed_links
     except KeyboardInterrupt:
         sys.exit()
 
 
 def initialize_parallel_threads(links: list, session: requests.Session):
+    global error_download_links
+    error_download_links = []
+
     if os.path.exists("error_links.txt"):
         os.unlink("error_links.txt")
 
     os.makedirs(TEMP_FOLDER, exist_ok=True)
 
     # No: of processes started depend on the number of cores available.
-    process_number: int = cpu_count()
+    process_number: int = (cpu_count() or 4) * 2
     print(f"initializing {process_number} processes for {total_content} links")
 
+    def update_failed_links(future):
+        temp = future.result()
+        if temp:
+            with mpLock:
+                error_download_links.extend(temp)
+
+    failed_links = []
     with ProcessPoolExecutor(max_workers=process_number) as processes:
         start = 0
         for _ in range(total_content):
             end = start + THREAD_NUM
             if end > total_content:
                 end = total_content
-            processes.submit(initialize_threads, links[start:end].copy(), session, links_file_map.copy())
+            failed_links.append(processes.submit(initialize_threads,
+                                                 links[start:end].copy(),
+                                                 session, links_file_map.copy()))
+            failed_links[-1].add_done_callback(update_failed_links)
             start = end
             if end == total_content:
                 break
+
+    if error_download_links:
+        with open("error_links.txt", "w") as file:
+            for link in error_download_links:
+                file.write(f"{link}\n")
 
 
 def concat_all_ts(files: list, video_file: str):
@@ -292,9 +324,11 @@ def write_file(video_file: str, session: requests.Session):
         logging.error(f"{len(files)} chunks was downloaded but {TOTAL_LINKS} chunks was expected,"
                       f"\n downloaded chunk ids {files} retrying with error links")
 
-        with open("error_links.txt") as file_links:
-            error_links = [link.strip() for link in file_links.readlines()]
+        with open("error_links.txt") as file:
+            temp = [line.strip() for line in file.readlines()]
 
+        shuffle(temp)
+        error_links = temp.copy()
         global total_content
         total_content = len(error_links)
         print(f"Some download chunks are missing attempting retry {TOTAL_RETRIES - MAX_RETRIES}")
@@ -364,6 +398,9 @@ def main(args: argparse.Namespace):
     total_content += len(links)
     TOTAL_LINKS = len(links)
 
+    # shuffle the links array
+    shuffle(links)
+
     try:
         if args.name:
             name = args.name
@@ -385,12 +422,11 @@ def main(args: argparse.Namespace):
             convert_video(name, f"{name}.mp4")
             print("Completed conversion to mp4")
 
-        sys.exit()
-
     except Exception as err:
         logging.error(err)
         print_exc()
-        sys.exit()
+
+    sys.exit()
 
 
 def convert_videos_process_fn():

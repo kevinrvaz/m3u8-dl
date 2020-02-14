@@ -1,14 +1,13 @@
-:authority: bzgvd.mcloud.to
+:authority: axjlp.mcloud.to
 :method: GET
-:path: /30/6a7b48c17e7776d1/a069b297fb3842ee5ce5379d701828b20345d85975a14b5af9009e0435c8ff472faf4c7bdf1b32de4810bb6629a51f3a6f757ed7081bbdda097036dc6d26e7d57c98f4e65b0fea82a43bf242de152b2346e90b8bc979364bac2964dcd27e9a92/hls/480/480.m3u8
+:path: /26/37bf3f5e317e6ae8/f732808fdc6c35e4973821ec42a661df7a93e5becca24e92b217b9a5d143875a1e19f23fe1423aab1ef1c2b02f363e4d8f8821fed67a3b6302160e6c8d4bc390139bcff5f61346090bda93ec5a7ea00757646f1ee37b592ec1721645336e66a7/hls/480/480.m3u8
 :scheme: https
 accept: */*
 accept-encoding: gzip, deflate, br
 accept-language: en-US,en;q=0.9
-cookie: _ga=GA1.2.1183249556.1580579348
 dnt: 1
 origin: https://mcloud.to
-referer: https://mcloud.to/embed/827q1v?key=01cb066a3af6203063aca3bb9bb1b0c5&site=gogoanime
+referer: https://mcloud.to/embed/j2v692?key=3b284fb772c5ab7c6e064d1fd508a1dd&site=gogoanime
 sec-fetch-dest: empty
 sec-fetch-mode: cors
 sec-fetch-site: same-site
