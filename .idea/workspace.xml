@@ -2,9 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b9df719f-adfc-42fb-9e8a-e0d724354e83" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/dictionaries/kevin.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/headers.txt" beforeDir="false" afterPath="$PROJECT_DIR$/headers.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/m3u8_playlist_downloader.py" beforeDir="false" afterPath="$PROJECT_DIR$/m3u8_playlist_downloader.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/m3u8dl.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/m3u8dl.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/m3u8lib/exceptions.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/m3u8lib/parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/m3u8lib/parser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/videolib/convertor.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/videolib/convertor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/videolib/exceptions.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/weblib/exceptions.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/weblib/fetch.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/weblib/fetch.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/weblib/parse.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/weblib/parse.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/m3u8_playlist_downloader.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,11 +32,13 @@
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/core/common" />
       <recent name="$PROJECT_DIR$/core" />
     </key>
   </component>
@@ -52,7 +63,12 @@
       <workItem from="1581345257804" duration="351000" />
       <workItem from="1581404663407" duration="4282000" />
       <workItem from="1581585964512" duration="4476000" />
-      <workItem from="1581598169484" duration="55890000" />
+      <workItem from="1581598169484" duration="58412000" />
+      <workItem from="1581705856071" duration="2315000" />
+      <workItem from="1581741944958" duration="6784000" />
+      <workItem from="1581755399441" duration="36606000" />
+      <workItem from="1581846721759" duration="7391000" />
+      <workItem from="1581854296602" duration="6306000" />
     </task>
     <servers />
   </component>
@@ -72,10 +88,10 @@
       <screen x="65" y="28" width="1855" height="1052" />
     </state>
     <state width="498" height="446" key="SwitcherDM/65.28.1855.1052@65.28.1855.1052" timestamp="1581598830423" />
-    <state x="647" y="381" key="com.intellij.ide.util.TipDialog" timestamp="1581598171020">
+    <state x="647" y="381" key="com.intellij.ide.util.TipDialog" timestamp="1581854297848">
       <screen x="65" y="28" width="1855" height="1052" />
     </state>
-    <state x="647" y="381" key="com.intellij.ide.util.TipDialog/65.28.1855.1052@65.28.1855.1052" timestamp="1581598171020" />
+    <state x="647" y="381" key="com.intellij.ide.util.TipDialog/65.28.1855.1052@65.28.1855.1052" timestamp="1581854297848" />
     <state x="527" y="244" width="920" height="620" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1581279266812">
       <screen x="65" y="28" width="1855" height="1052" />
     </state>
@@ -84,5 +100,9 @@
       <screen x="65" y="28" width="1855" height="1052" />
     </state>
     <state x="759" y="469" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/65.28.1855.1052@65.28.1855.1052" timestamp="1581335706437" />
+    <state x="655" y="260" width="672" height="678" key="search.everywhere.popup" timestamp="1581769005292">
+      <screen x="65" y="28" width="1855" height="1052" />
+    </state>
+    <state x="655" y="260" width="672" height="678" key="search.everywhere.popup/65.28.1855.1052@65.28.1855.1052" timestamp="1581769005292" />
   </component>
 </project>
