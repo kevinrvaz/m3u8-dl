@@ -22,6 +22,7 @@ def send_data(client: socket.socket, data: str) -> None:
     """
 
     client.send(bytes(data, "utf-8"))
+    client.close()
 
 
 def receive_data(client: socket.socket, d_type: str = "str") -> Any:
@@ -40,10 +41,11 @@ def receive_data(client: socket.socket, d_type: str = "str") -> Any:
     str
         The data received from the client socket
     """
+    data = client.recv(4096)
+    client.close()
     if d_type == "bytes":
-        data = client.recv(4096)
         return pickle.loads(data)
-    return client.recv(4096).decode("utf-8")
+    return data.decode("utf-8")
 
 
 class ProducerServerProcess:
@@ -56,14 +58,8 @@ class ProducerServerProcess:
     __server : Server
         The socket that listens on the ip and port provided in the __init__() method
 
-    __video_file_name : str
-        The video_file_name is passed to the video_handling process
-
     __queue : Queue
         The worker queue that is responsible for passing data between download_process and video_handling process
-
-    __concat : bool
-        This variable is used to tell the video_handling process to start concatenating all .ts files (default is False)
 
     __stop : bool
         This variable is used to tell the producer_server_process to stop the server
@@ -92,15 +88,13 @@ class ProducerServerProcess:
         """
 
         self.__server: Server = Server(ip, port)
-        self.__video_file_name: str = ""
         self.__queue: Queue = Queue()
         self.__update_links: int = 0
         self.__stop_queue = False
-        self.__concat: bool = False
         self.__stop: bool = False
         self.__sent: int = 0
 
-    def start(self) -> None:
+    def start(self, debug: bool) -> None:
         """A function used to start the server"""
         soc = self.__server.socket
         while not self.__stop:
@@ -109,11 +103,11 @@ class ProducerServerProcess:
                 client, address = soc.accept()
                 data = client.recv(HEADER_SIZE)
                 action = data.decode("utf-8").split()[0].strip()
+                if debug:
+                    print(f"Received action {action}")
                 self.process_action(action, client)
 
-                client.close()
-
-            except (KeyboardInterrupt, Exception) as err:
+            except (KeyboardInterrupt, Exception):
                 print_exc()
                 sys.exit()
 
@@ -138,7 +132,6 @@ class ProducerServerProcess:
         elif action == "STOP_QUEUE":
             data = receive_data(client).strip()
             self.__stop_queue = True
-            print(data)
             self.__update_links = int(data)
 
         # The GET_FILENAME_QUEUE action is used to query the work queue to get the next task to the
@@ -151,29 +144,6 @@ class ProducerServerProcess:
         elif action == "GET_FILENAME_QUEUE" and self.__stop_queue:
             send_data(client, str(self.__update_links))
 
-        # The POST_CONVERT_VIDEO action is used to tell the producer_server_process that it can begin the
-        # video conversion to mp4
-        elif action == "POST_CONVERT_VIDEO":
-            data = receive_data(client)
-            self.__video_file_name = data
-
-        # The GET_CONVERT_VIDEO action is used to send the file_name to the video handling process so,
-        # that it can begin conversion of the file to mp4
-        elif action == "GET_CONVERT_VIDEO" and self.__video_file_name:
-            send_data(client, self.__video_file_name)
-            self.__video_file_name = ""
-
-        # The POST_CONCAT_TS action is used to tell the producer_server_process that it can begin the
-        # concatenation of all the downloaded .ts files
-        elif action == "POST_CONCAT_TS":
-            self.__concat = True
-
-        # The GET_CONCAT_TS action is used to tell the video_handling process that it can begin the
-        # concatenation of all the .ts files
-        elif action == "GET_CONCAT_TS" and self.__concat:
-            send_data(client, "YES")
-            self.__concat = False
-
         elif action == "STOP":
             self.__stop = True
 
@@ -181,14 +151,14 @@ class ProducerServerProcess:
 # producer_server_process is responsible for passing of messages between the download_process and
 # video_handling process supported actions: - POST_FILENAME_QUEUE, GET_FILENAME_QUEUE, POST_CONVERT_VIDEO,
 # GET_CONVERT_VIDEO, POST_CONCAT_TS, GET_CONCAT_TS, STOP
-def producer_server_process():
+def producer_server_process(debug=False):
     """A function that starts the ProducerServerProcess"""
     print(f"Started Producer Process {current_process().name}")
     producer = ProducerServerProcess("", PORT)
 
     try:
 
-        producer.start()
+        producer.start(debug)
 
     except (KeyboardInterrupt, Exception):
         sys.exit()

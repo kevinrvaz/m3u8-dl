@@ -129,13 +129,6 @@ def process_pool_executor_handler(executor: ProcessPoolExecutor, manager: Downlo
         manager.done_retries += 1
         return process_pool_executor_handler(executor, manager, file_maps, directory)
 
-    # client = Client(IP, PORT)
-    # client.send_data("POST_CONCAT_TS")
-
-    # if manager.convert:
-    #     client = Client(IP, PORT)
-    #     client.send_data("POST_CONVERT_VIDEO")
-
 
 def start_threads(links: List[str], maps: Dict[str, str], session: requests.Session,
                   headers: Dict[str, str], file_path_prefix: str, http2: bool) -> List[Optional[str]]:
@@ -153,7 +146,7 @@ def start_threads(links: List[str], maps: Dict[str, str], session: requests.Sess
     thread_num: int = 4 if len(links) > 4 else len(links)
 
     sent_links = {}
-    print(f"initializing {current_process().name}")
+
     with ThreadPoolExecutor(max_workers=thread_num) as executor:
         for link in links:
             temp_path = os.path.join(file_path_prefix, maps[link])

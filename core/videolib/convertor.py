@@ -46,5 +46,5 @@ def get_ts_start_time(file_path: str) -> float:
 
     cmd = "ffprobe {} -show_entries format=start_time -v quiet -of csv='p=0'" \
         .format(file_path)
-    ts_time_stamp = subprocess.check_output(cmd, shell=True)
+    ts_time_stamp = subprocess.check_output(cmd, shell=True, close_fds=True)
     return float(ts_time_stamp)

@@ -1,38 +1,43 @@
 from .videolib.convertor import convert_video, concat_all_ts, get_ts_start_time
-from .common.base import Client, Graph
-from .common.constants import IP, PORT
 from multiprocessing import current_process
-from time import sleep
+from .common.constants import IP, PORT
+from .common.base import Client, Graph
 from traceback import print_exc
+from random import randint
+from time import sleep
 import sys
 
 
-def get_task(total_links, file_meta_data, stop=False):
-    try:
-        data = ""
-        while not stop:
-            client = Client("", PORT)
-            client.send_data("GET_FILENAME_QUEUE")
-            data = client.receive_data()
-            if data:
-                break
-            sleep(40)
+def get_task(total_links, file_meta_data, stop=False, debug=False):
+    while not stop:
+        try:
+            while True:
+                client = Client("", PORT)
+                client.send_data("GET_FILENAME_QUEUE")
+                data = client.receive_data()
+                if debug:
+                    print(f"begin processing {data}")
+                if data:
+                    break
+                sleep(randint(1, 10))
 
-        if data and not data.isnumeric():
-            file_meta_data[data] = get_ts_start_time(data)
+            if data and not data.isnumeric():
+                file_meta_data[data] = get_ts_start_time(data)
 
-        if len(file_meta_data) == total_links:
-            return file_meta_data
+            if len(file_meta_data) == total_links:
+                stop = True
+                continue
 
-        elif not data.isnumeric():
-            return get_task(total_links, file_meta_data)
-        return file_meta_data
-    except:
-        print_exc()
+            elif not data.isnumeric():
+                continue
+        except:
+            print_exc()
+
+    return file_meta_data
 
 
-def start_process(total_links, file_name):
-    file_meta_data = get_task(total_links, {})
+def start_process(total_links, file_name, convert, debug):
+    file_meta_data = get_task(total_links, {}, False, debug)
 
     # non_duplicates = []
     #
@@ -55,18 +60,23 @@ def start_process(total_links, file_name):
     client = Client(IP, PORT)
     client.send_data("STOP")
 
-    print("Concatenating")
+    if debug:
+        print("Concatenating")
     concat_all_ts(file_name)
-    convert_video(file_name, f"{file_name}.mp4")
+
+    if convert:
+        if debug:
+            print("Converting to mp4")
+        convert_video(file_name, f"{file_name}.mp4")
 
 
 # video_handling process is responsible for constructing a graph to filter out duplicate video frames,
 # concat all .ts files and convert the resulting concatenation to mp4
-def video_handling(total_links, file_name):
+def video_handling(total_links, file_name, convert, debug=False):
     print(f"Starting video handling process {current_process().name}")
 
     try:
-        start_process(total_links, file_name)
+        start_process(total_links, file_name, convert, debug)
 
     except (KeyboardInterrupt, Exception):
         print_exc()

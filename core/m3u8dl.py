@@ -35,6 +35,9 @@ def main():
     parser.add_argument("-f", "--force", action="store_true", help="If this flag is used and the video has been "
                                                                    "downloaded the download will restart")
     parser.add_argument("-c", "--convert", help="Convert the downloaded video to mp4 using ffmpeg", action="store_true")
+    parser.add_argument("-d", "--debug", help="Print helpful messages to the terminal to "
+                                              "help understanding the process flow", action="store_true")
+
     cli_args = parser.parse_args()
 
     # HTTP/1.1 adapter
@@ -76,8 +79,10 @@ def main():
     os.makedirs(path_prefix, exist_ok=True)
 
     try:
-        server = Process(target=producer_server_process)
-        video = Process(target=video_handling, args=(len(links), name))
+        debug = cli_args.debug
+        server = Process(target=producer_server_process, args=(debug,), name="producer_server_process")
+        video = Process(target=video_handling, args=(len(links), name, cli_args.convert, debug),
+                        name="video_handling_process")
         server.start()
         video.start()
 
