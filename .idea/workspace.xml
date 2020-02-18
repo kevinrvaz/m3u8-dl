@@ -3,12 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="b9df719f-adfc-42fb-9e8a-e0d724354e83" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/common/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/common/constants.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/download_process.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/download_process.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/m3u8dl.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/m3u8dl.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/producer_server_process.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/producer_server_process.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/video_handling_process.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/video_handling_process.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/videolib/convertor.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/videolib/convertor.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,7 +62,12 @@
       <workItem from="1581854296602" duration="7431000" />
       <workItem from="1581871206973" duration="448000" />
       <workItem from="1581879290270" duration="1726000" />
-      <workItem from="1581938920560" duration="3552000" />
+      <workItem from="1581938920560" duration="5999000" />
+      <workItem from="1581950240364" duration="1590000" />
+      <workItem from="1582000888428" duration="4118000" />
+      <workItem from="1582011556917" duration="412000" />
+      <workItem from="1582028559797" duration="60000" />
+      <workItem from="1582032617507" duration="3143000" />
     </task>
     <servers />
   </component>
@@ -86,10 +87,10 @@
       <screen x="65" y="28" width="1855" height="1052" />
     </state>
     <state width="498" height="446" key="SwitcherDM/65.28.1855.1052@65.28.1855.1052" timestamp="1581598830423" />
-    <state x="647" y="381" key="com.intellij.ide.util.TipDialog" timestamp="1581938922445">
+    <state x="647" y="381" key="com.intellij.ide.util.TipDialog" timestamp="1582032617253">
       <screen x="65" y="28" width="1855" height="1052" />
     </state>
-    <state x="647" y="381" key="com.intellij.ide.util.TipDialog/65.28.1855.1052@65.28.1855.1052" timestamp="1581938922445" />
+    <state x="647" y="381" key="com.intellij.ide.util.TipDialog/65.28.1855.1052@65.28.1855.1052" timestamp="1582032617253" />
     <state x="527" y="244" width="920" height="620" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1581279266812">
       <screen x="65" y="28" width="1855" height="1052" />
     </state>

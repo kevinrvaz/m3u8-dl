@@ -1,25 +1,31 @@
-from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor, Future
+from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor, Future, wait
 from multiprocessing import Manager, current_process
 from .common.constants import IP, PORT, HEADER_SIZE
 from typing import List, Dict, Optional
 from .weblib.fetch import fetch_data
 from .common.base import Client
+from traceback import print_exc
+from time import time, sleep
 from threading import Lock
 from random import shuffle
-from time import time
 import requests
 import pickle
 import sys
 import os
 
+thread_executors = {}
+
 
 def download_process(links, total_links, session, headers, http2, max_retries,
-                     convert, file_link_maps, path_prefix) -> None:
-
+                     convert, file_link_maps, path_prefix, debug) -> None:
     print(f"Starting Download process {current_process().name}")
     start_time = time()
     try:
-        download_manager = DownloadProcess(links, total_links, session, headers, http2, max_retries, convert)
+        download_manager = DownloadProcess(links, total_links, session, headers, http2,
+                                           max_retries, convert, debug)
+        for i in range(4, 12):
+            thread_executors[f"Process-{i}"] = ThreadPoolExecutor(max_workers=4)
+
         start_processes(download_manager, file_link_maps, path_prefix)
         try:
             client = Client(IP, PORT)
@@ -27,16 +33,20 @@ def download_process(links, total_links, session, headers, http2, max_retries,
         except:
             pass
 
-    except (KeyboardInterrupt, Exception):
-        sys.exit()
+        for executor in thread_executors.values():
+            executor.shutdown(wait=True)
 
-    print(f"Download took {time() - start_time}")
+    except (KeyboardInterrupt, Exception):
+        print_exc()
+
+    print(f"Download took {time() - start_time} seconds")
     print(f"Stopped Download process {current_process().name}")
 
 
 class DownloadProcess:
     def __init__(self, links: List[str], total_links: int, session: requests.Session,
-                 headers: Dict[str, str], http2: bool = False, max_retries: int = 5, convert: bool = True):
+                 headers: Dict[str, str], http2: bool = False, max_retries: int = 5,
+                 convert: bool = True, debug: bool = False):
         self.__session: requests.Session = session
         self.__headers: Dict[str, str] = headers
         self.__total_links: int = total_links
@@ -47,6 +57,7 @@ class DownloadProcess:
         self.__process_num = 8
         self.__thread_num = 4
         self.__sent = 0
+        self.debug = debug
         self.done_retries = 0
         self.error_links = []
 
@@ -73,8 +84,8 @@ class DownloadProcess:
     def get_total_downloaded_links_count(self) -> int:
         return self.__sent
 
-    def set_total_downloaded_links_count(self, val: int = 1) -> None:
-        self.__sent += val
+    def set_total_downloaded_links_count(self, val: int) -> None:
+        self.__sent = val
 
 
 def start_processes(download_manager: DownloadProcess, file_link_maps: Dict[str, str], path_prefix: str) -> None:
@@ -88,11 +99,6 @@ def start_processes(download_manager: DownloadProcess, file_link_maps: Dict[str,
 
 def process_pool_executor_handler(executor: ProcessPoolExecutor, manager: DownloadProcess,
                                   file_maps: Dict[str, str], directory: str) -> None:
-    if manager.done_retries == manager.max_retries:
-        return
-
-    print(f"Starting download {manager.get_total_links() - manager.get_total_downloaded_links_count()} left")
-
     lock = Manager().Lock()
 
     def update_hook(future: Future):
@@ -101,38 +107,52 @@ def process_pool_executor_handler(executor: ProcessPoolExecutor, manager: Downlo
             with lock:
                 manager.error_links.extend(temp)
 
-    if manager.error_links:
-        shuffle(manager.error_links)
-        download_links = manager.error_links.copy()
-        manager.error_links = []
-    else:
-        download_links = manager.get_download_links().copy()
-        shuffle(download_links)
+    while manager.done_retries != manager.max_retries:
+        print(f"Starting download {manager.get_total_links() - manager.get_total_downloaded_links_count()} left")
 
-    start = 0
-    for _ in range(len(download_links)):
-        end = start + manager.get_thread_num()
-        if end > len(download_links):
-            end = len(download_links)
-        executor.submit(start_threads, download_links[start:end], file_maps,
-                        manager.get_session(), manager.get_headers(),
-                        directory, manager.http2).add_done_callback(update_hook)
-        start = end
-        if end >= len(download_links):
+        if len(manager.error_links):
+            shuffle(manager.error_links)
+            download_links = manager.error_links.copy()
+            manager.error_links = []
+        else:
+            download_links = manager.get_download_links().copy()
+            shuffle(download_links)
+
+        process_futures: List[Future] = []
+
+        start = 0
+        for _ in range(len(download_links)):
+            end = start + manager.get_thread_num()
+            if end > len(download_links):
+                end = len(download_links)
+            process_futures.append(executor.submit(start_threads, download_links[start:end], file_maps,
+                                                   manager.get_session(), manager.get_headers(),
+                                                   directory, manager.http2, manager.debug))
+            process_futures[-1].add_done_callback(update_hook)
+            start = end
+            if end >= len(download_links):
+                break
+
+        wait(process_futures)
+
+        manager.set_total_downloaded_links_count(manager.get_total_links() - len(manager.error_links))
+
+        if manager.debug:
+            print(f"Total downloaded links {manager.get_total_downloaded_links_count()}")
+            print(f"Error links generated {len(manager.error_links)}")
+
+        if len(manager.error_links):
+            print(f"{manager.get_total_links()} was expected but "
+                  f"{manager.get_total_downloaded_links_count()} was downloaded.")
+            manager.done_retries += 1
+            print(f"Trying retry {manager.done_retries}")
+        else:
             break
-
-    manager.set_total_downloaded_links_count(manager.get_total_links() - len(manager.error_links))
-
-    if manager.error_links:
-        print(f"{manager.get_total_links()} was expected but "
-              f"{manager.get_total_downloaded_links_count()} was downloaded.")
-        manager.done_retries += 1
-        return process_pool_executor_handler(executor, manager, file_maps, directory)
 
 
 def start_threads(links: List[str], maps: Dict[str, str], session: requests.Session,
-                  headers: Dict[str, str], file_path_prefix: str, http2: bool) -> List[Optional[str]]:
-
+                  headers: Dict[str, str], file_path_prefix: str, http2: bool,
+                  debug: bool = False) -> List[Optional[str]]:
     lock = Lock()
 
     def update_hook(future: Future):
@@ -143,16 +163,20 @@ def start_threads(links: List[str], maps: Dict[str, str], session: requests.Sess
 
     failed_links = []
 
-    thread_num: int = 4 if len(links) > 4 else len(links)
-
     sent_links = {}
 
-    with ThreadPoolExecutor(max_workers=thread_num) as executor:
-        for link in links:
-            temp_path = os.path.join(file_path_prefix, maps[link])
-            sent_links[link] = temp_path
-            executor.submit(download_thread, temp_path, link, session, headers, http2)\
-                    .add_done_callback(update_hook)
+    process_name = current_process().name
+
+    executor = thread_executors[process_name]
+    thread_futures = []
+
+    for link in links:
+        temp_path = os.path.join(file_path_prefix, maps[link])
+        sent_links[link] = temp_path
+        thread_futures.append(executor.submit(download_thread, temp_path, link, session, headers, http2))
+        thread_futures[-1].add_done_callback(update_hook)
+
+    wait(thread_futures)
 
     for link in failed_links:
         del sent_links[link]
@@ -163,14 +187,15 @@ def start_threads(links: List[str], maps: Dict[str, str], session: requests.Sess
     client.send_data(msg)
     client.send_data(send_data, "bytes")
 
+    if debug:
+        print(f"Sending data to server {send_data}")
+
     return failed_links
 
 
 def download_thread(file_path: str, link: str, session: requests.Session,
                     headers: Dict[str, str], http2: bool) -> Optional[str]:
-
     if os.path.exists(file_path):
         return None
 
     return fetch_data(link, headers, session, 120, file_path, http2)
-

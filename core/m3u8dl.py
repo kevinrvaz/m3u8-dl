@@ -6,6 +6,7 @@ from .weblib.parse import construct_headers
 from requests.adapters import HTTPAdapter
 from hyper.contrib import HTTP20Adapter
 from multiprocessing import Process
+from traceback import print_exc
 from shutil import rmtree
 import requests
 import argparse
@@ -88,11 +89,12 @@ def main():
 
         download_process(links, len(links), sess, headers, http2,
                          MAX_RETRIES, cli_args.convert, file_link_maps,
-                         path_prefix)
+                         path_prefix, debug)
 
         server.join()
         video.join()
         rmtree(path_prefix)
     except (KeyboardInterrupt, Exception):
-        pass
+        print_exc()
+
     sys.exit()

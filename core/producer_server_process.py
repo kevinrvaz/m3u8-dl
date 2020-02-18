@@ -1,4 +1,4 @@
-from .common.constants import IP, PORT, HEADER_SIZE
+from .common.constants import PORT, HEADER_SIZE
 from multiprocessing import current_process
 from .common.base import Server
 from traceback import print_exc
@@ -25,7 +25,7 @@ def send_data(client: socket.socket, data: str) -> None:
     client.close()
 
 
-def receive_data(client: socket.socket, d_type: str = "str") -> Any:
+def receive_data(client: socket.socket, d_type: str = "str", debug: bool = False) -> Any:
     """ A function used to abstract receiving data from client
 
     Parameters
@@ -36,6 +36,9 @@ def receive_data(client: socket.socket, d_type: str = "str") -> Any:
     d_type : str, optional
         A string specifying the expected data type (default is "str")
 
+    debug : bool
+        A bool specifying whether to print debug options (default is False)
+
     Returns
     -------
     str
@@ -43,6 +46,10 @@ def receive_data(client: socket.socket, d_type: str = "str") -> Any:
     """
     data = client.recv(4096)
     client.close()
+
+    if debug:
+        print(f"Data received by server {data}")
+
     if d_type == "bytes":
         return pickle.loads(data)
     return data.decode("utf-8")
@@ -104,7 +111,7 @@ class ProducerServerProcess:
                 data = client.recv(HEADER_SIZE)
                 action = data.decode("utf-8").split()[0].strip()
                 if debug:
-                    print(f"Received action {action}")
+                    print(f"Received action {action} from {address}")
                 self.process_action(action, client)
 
             except (KeyboardInterrupt, Exception):

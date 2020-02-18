@@ -21,6 +21,11 @@ def get_task(total_links, file_meta_data, stop=False, debug=False):
                     break
                 sleep(randint(1, 10))
 
+            if data.isnumeric():
+                if debug:
+                    print(f"Processed links {len(file_meta_data)} links downloaded by server {data}")
+                break
+
             if data and not data.isnumeric():
                 file_meta_data[data] = get_ts_start_time(data)
 
@@ -32,6 +37,7 @@ def get_task(total_links, file_meta_data, stop=False, debug=False):
                 continue
         except:
             print_exc()
+            sys.exit()
 
     return file_meta_data
 
@@ -57,7 +63,7 @@ def start_process(total_links, file_name, convert, debug):
         for file_path in sorted(list(file_meta_data.keys()), key=lambda k: file_meta_data[k]):
             file.write(f"file '{file_path}'\n")
 
-    client = Client(IP, PORT)
+    client = Client("", PORT)
     client.send_data("STOP")
 
     if debug:
