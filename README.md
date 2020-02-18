@@ -30,3 +30,4 @@ for uninstall in ubuntu:-
     --header-path, -p:- specify the path of header file`<br>
     --force, -f:- specify to re-download the video if it exists`<br>
     --retry, -r:- specify number of retries, by default 5 retries will be initiated
+    --debug, -d:- print helpful messages to console to understand program flow
