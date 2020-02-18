@@ -37,6 +37,7 @@ def get_task(total_links, file_meta_data, stop=False, debug=False):
                 continue
         except:
             print_exc()
+            sys.exit()
 
     return file_meta_data
 
