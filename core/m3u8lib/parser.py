@@ -3,7 +3,7 @@ from typing import List, Dict
 import requests
 
 
-def fetch_playlist_links(session: requests.Session, playlist_url: str, headers: Dict[str, str]) -> List[str]:
+def fetch_playlist_links(session: requests.Session, playlist_url: str) -> List[str]:
     """ Fetches the m3u8 playlist from the playlist_url
 
     Parameters
@@ -12,8 +12,6 @@ def fetch_playlist_links(session: requests.Session, playlist_url: str, headers: 
         The session via which the request will be made
     playlist_url : str
         The url where the m3u8 playlist is hosted
-    headers : Dict[str, str]
-        The dictionary containing the headers of the playlist_url
 
     Returns
     -------
@@ -21,7 +19,7 @@ def fetch_playlist_links(session: requests.Session, playlist_url: str, headers: 
         A list with all the urls where the .ts files are hosted
     """
 
-    res: requests.Response = session.get(playlist_url, headers=headers, timeout=60)
+    res: requests.Response = session.get(playlist_url, timeout=60)
 
     with open("links.txt", "wb") as file:
         file.write(res.content)

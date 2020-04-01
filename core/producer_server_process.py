@@ -44,11 +44,19 @@ def receive_data(client: socket.socket, d_type: str = "str", debug: bool = False
     str
         The data received from the client socket
     """
-    data = client.recv(4096)
+    got_data = []
+    while True:
+        temp = client.recv(4096)
+        if len(temp) <= 0 or not temp:
+            break
+        got_data.append(temp)
+
+    data = b"".join(got_data)
+
     client.close()
 
     if debug:
-        print(f"Data received by server {data}")
+        print(f"Data received by server of size {len(data)} bytes")
 
     if d_type == "bytes":
         return pickle.loads(data)
@@ -168,6 +176,7 @@ def producer_server_process(debug=False):
         producer.start(debug)
 
     except (KeyboardInterrupt, Exception):
+        print_exc()
         sys.exit()
 
     print(f"Stopped Producer Server {current_process().name}")

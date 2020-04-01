@@ -4,16 +4,13 @@ import requests
 
 
 # noinspection PyBroadException
-def fetch_data(download_url: str, headers: dict, session: requests.Session,
+def fetch_data(download_url: str, session: requests.Session,
                timeout: int, file_path: str, http2: bool = False) -> Optional[str]:
     """
     Parameters
     ----------
     download_url : str
         The url that hosts the .ts file
-
-    headers : dict
-        The request headers for the download url
 
     session : requests.Session
         The session using which we can make a request
@@ -36,9 +33,9 @@ def fetch_data(download_url: str, headers: dict, session: requests.Session,
     try:
         if http2:
             timeout += 500
-            if ":path" in headers:
+            if ":path" in session.headers:
                 parsed_url_path = urlparse(download_url).path
-                headers[":path"] = parsed_url_path
+                session.headers[":path"] = parsed_url_path
 
             # if temp_adapter object gets called with the base class __init__ we call the temp_adapter
             # __init__ method.
@@ -46,7 +43,7 @@ def fetch_data(download_url: str, headers: dict, session: requests.Session,
             if "connections" not in vars(temp_adapter):
                 temp_adapter.__init__()
 
-        request_data: requests.Response = session.get(download_url, headers=headers, timeout=timeout)
+        request_data: requests.Response = session.get(download_url, timeout=timeout)
     except Exception:
         return download_url
 
