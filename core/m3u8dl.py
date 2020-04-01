@@ -73,7 +73,9 @@ def main():
         # Mount a parsed prefix to the session, with HTTP/2 adapter
         sess.mount(parsed_prefix, ADAPTER2)
 
-    links = fetch_playlist_links(sess, url, headers)
+    sess.headers = headers
+
+    links = fetch_playlist_links(sess, url)
     file_link_maps = construct_file_name_links_map(links)
     path_prefix = "." + "".join([i for i in url if i.isalnum()])
 
@@ -82,12 +84,13 @@ def main():
     try:
         debug = cli_args.debug
         server = Process(target=producer_server_process, args=(debug,), name="producer_server_process")
+        server.start()
+
         video = Process(target=video_handling, args=(len(links), name, cli_args.convert, debug),
                         name="video_handling_process")
-        server.start()
         video.start()
 
-        download_process(links, len(links), sess, headers, http2,
+        download_process(links, len(links), sess, http2,
                          MAX_RETRIES, cli_args.convert, file_link_maps,
                          path_prefix, debug)
 

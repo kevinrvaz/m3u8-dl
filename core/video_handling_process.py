@@ -82,6 +82,7 @@ def video_handling(total_links, file_name, convert, debug=False):
     print(f"Starting video handling process {current_process().name}")
 
     try:
+        sleep(10)
         start_process(total_links, file_name, convert, debug)
 
     except (KeyboardInterrupt, Exception):
