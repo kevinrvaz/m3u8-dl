@@ -1,10 +1,12 @@
-from .videolib.convertor import convert_video, concat_all_ts, get_ts_start_time
 from multiprocessing import current_process
-from .common.constants import IP, PORT
-from .common.base import Client, Graph
 from traceback import print_exc
 from random import randint
 from time import sleep
+
+from .videolib.convertor import convert_video, concat_all_ts, get_ts_start_time
+from .common.constants import PORT
+from .common.base import Client
+
 import sys
 
 

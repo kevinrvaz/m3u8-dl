@@ -1,12 +1,11 @@
 from urllib.parse import urlparse
 from typing import Optional
-from copy import copy
+
 import requests
 
 
-# noinspection PyBroadException
 def fetch_data(download_url: str, session: requests.Session,
-               timeout: int, file_path: str, http2: bool = False) -> Optional[str]:
+               timeout: int, file_path: str, http2: bool) -> Optional[str]:
     """
     Parameters
     ----------
@@ -22,8 +21,8 @@ def fetch_data(download_url: str, session: requests.Session,
     file_path : str
         The path where the file needs to be stored
 
-    http2 : bool, optional
-        Specify whether to use HTTP/2 adapters to make the request (default is False)
+    http2: bool
+        A boolean to specify the need for http2 support
 
     Returns
     -------
@@ -33,24 +32,13 @@ def fetch_data(download_url: str, session: requests.Session,
 
     try:
         if http2:
-            headers = session.headers.copy()
-
             if ":path" in session.headers:
                 parsed_suffix = urlparse(download_url).path
-                headers[":path"] = parsed_suffix
-
-            new_session = copy(session)
-            new_session.headers = headers
-            session = new_session
-
-            # if temp_adapter object gets called with the base class __init__ we call the temp_adapter
-            # __init__ method.
-            session_adapter = session.get_adapter(download_url)
-            if "connections" not in vars(session_adapter):
-                session_adapter.__init__()
+                session.headers[":path"] = parsed_suffix
 
         request_data: requests.Response = session.get(download_url, timeout=timeout)
-    except Exception:
+    except (ConnectionResetError, ConnectionRefusedError, ConnectionError,
+            TimeoutError, ConnectionAbortedError, OSError):
         return download_url
 
     with open(file_path, "wb") as video_file:

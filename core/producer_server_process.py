@@ -1,9 +1,11 @@
-from .common.constants import PORT, HEADER_SIZE
 from multiprocessing import current_process
-from .common.base import Server
 from traceback import print_exc
 from queue import Queue
 from typing import Any
+
+from .common.constants import PORT, HEADER_SIZE
+from .common.base import Server
+
 import pickle
 import socket
 import sys

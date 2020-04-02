@@ -1,13 +1,15 @@
-from .m3u8lib.parser import fetch_playlist_links, construct_file_name_links_map
-from .producer_server_process import producer_server_process
-from .video_handling_process import video_handling
-from .download_process import download_process
-from .weblib.parse import construct_headers
 from requests.adapters import HTTPAdapter
 from hyper.contrib import HTTP20Adapter
 from multiprocessing import Process
 from traceback import print_exc
 from shutil import rmtree
+
+from .m3u8lib.parser import fetch_playlist_links, construct_file_name_links_map
+from .producer_server_process import producer_server_process
+from .video_handling_process import video_handling
+from .download_process import download_process
+from .weblib.parse import construct_headers
+
 import requests
 import argparse
 import sys
@@ -67,7 +69,6 @@ def main():
 
     # Mount new connection adapters to the session created.
     sess: requests.Session = requests.Session()
-    # parsed_prefix = "/".join(url.split("/")[:-1])
     sess.mount("http://", ADAPTER1)
     if http2:
         sess.mount("https://", ADAPTER2)
