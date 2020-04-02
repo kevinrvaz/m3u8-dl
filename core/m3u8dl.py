@@ -67,11 +67,10 @@ def main():
 
     # Mount new connection adapters to the session created.
     sess: requests.Session = requests.Session()
-    parsed_prefix = "/".join(url.split("/")[:-1])
-    sess.mount(parsed_prefix, ADAPTER1)
+    # parsed_prefix = "/".join(url.split("/")[:-1])
+    sess.mount("http://", ADAPTER1)
     if http2:
-        # Mount a parsed prefix to the session, with HTTP/2 adapter
-        sess.mount(parsed_prefix, ADAPTER2)
+        sess.mount("https://", ADAPTER2)
 
     sess.headers = headers
 
@@ -90,9 +89,8 @@ def main():
                         name="video_handling_process")
         video.start()
 
-        download_process(links, len(links), sess, http2,
-                         MAX_RETRIES, cli_args.convert, file_link_maps,
-                         path_prefix, debug)
+        download_process(links, len(links), sess, http2, MAX_RETRIES, cli_args.convert,
+                         file_link_maps, path_prefix, debug)
 
         server.join()
         video.join()

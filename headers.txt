@@ -1,12 +1,17 @@
-Accept: */*
-Accept-Encoding: gzip, deflate, br
-Accept-Language: en-US,en;q=0.9
-Connection: keep-alive
-DNT: 1
-Host: hls13x.cdnfile.info
-Origin: https://vidstreaming.io
-Referer: https://vidstreaming.io/
-Sec-Fetch-Dest: empty
-Sec-Fetch-Mode: cors
-Sec-Fetch-Site: cross-site
-User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36
+:authority: fxrvx.mcloud.to
+:method: GET
+:path: /6/1b6806ffb817663c/d2cffc865d126159cda679f80e00e2cc641e60a9f8477d16608c68016e7cb6889044735d9f321000179987e21d3c04d7729bf6d142ecd2d6935e71b122d38111fe7e375806bf60873eb146957cbb350a5d338428647508589243b8b61eeee5a9/hls/480/480.m3u8
+:scheme: https
+accept: */*
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.9
+cache-control: no-cache
+cookie: __cf_bm=735338bebf9ca89ed477973ca5688d98e74fe773-1585820433-1800-AWmbCTx2p2nIe0iTg+NYkX55DR2ol8B2OMcuDM8dsIn0kh7TbVdDSPWjXlJ3wkvo+V/M3ak0UlWNUwvq/A1lf3qykFOoyWb3rcj1QGGhetqj
+dnt: 1
+origin: https://mcloud.to
+pragma: no-cache
+referer: https://mcloud.to/embed/kx4pxr?key=b509f08e8d25c9c303846596eee4b6ff&site=gogoanime
+sec-fetch-dest: empty
+sec-fetch-mode: cors
+sec-fetch-site: same-site
+user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36

@@ -26,7 +26,7 @@ def download_process(links, total_links, session, http2, max_retries,
         try:
             client = Client(IP, PORT)
             client.send_data(f"{'STOP_QUEUE':<{HEADER_SIZE}}{download_manager.get_total_downloaded_links_count()}")
-        except Exception:
+        except (ConnectionRefusedError, ConnectionResetError):
             print_exc()
 
     except (KeyboardInterrupt, Exception):
@@ -58,6 +58,9 @@ class DownloadProcess:
 
     def get_process_num(self) -> int:
         return self.__process_num
+
+    def set_thread_num(self, val: int) -> None:
+        self.__thread_num = val
 
     def get_download_links(self) -> List[str]:
         return self.__links
@@ -101,7 +104,8 @@ def process_pool_executor_handler(executor: ProcessPoolExecutor, manager: Downlo
     while manager.done_retries != manager.max_retries:
         print(f"Starting download {manager.get_total_links() - manager.get_total_downloaded_links_count()} links left")
         available_cpus = list(os.sched_getaffinity(os.getpid()))
-        print(f"available cpu's {available_cpus}, initializing 20 threads with {manager.get_thread_num()} links per "
+        print(f"available cpu's {available_cpus}, initializing {5 * manager.get_process_num()}"
+              f" threads with {manager.get_thread_num()} links per "
               f"process")
 
         if len(manager.error_links):
@@ -146,6 +150,8 @@ def process_pool_executor_handler(executor: ProcessPoolExecutor, manager: Downlo
             print(f"Error links generated {len(manager.error_links)}")
 
         if len(manager.error_links):
+            manager.set_thread_num((manager.get_total_links()
+                                    - manager.get_total_downloaded_links_count()) // manager.get_process_num())
             print(f"{manager.get_total_links()} was expected but "
                   f"{manager.get_total_downloaded_links_count()} was downloaded.")
             manager.done_retries += 1
@@ -167,7 +173,7 @@ def start_threads(links: List[str], maps: Dict[str, str], session: requests.Sess
 
     os.sched_setaffinity(os.getpid(), {cpu_num})
 
-    with ThreadPoolExecutor(max_workers=20) as executor:
+    with ThreadPoolExecutor(max_workers=5) as executor:
         for link in links:
             temp_path = os.path.join(file_path_prefix, maps[link])
             sent_links[link] = temp_path
