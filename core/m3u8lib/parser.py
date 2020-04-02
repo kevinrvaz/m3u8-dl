@@ -1,6 +1,7 @@
 from urllib.parse import urlparse, urljoin
 from typing import List, Dict
 import requests
+import os
 
 
 def fetch_playlist_links(session: requests.Session, playlist_url: str) -> List[str]:
@@ -27,6 +28,8 @@ def fetch_playlist_links(session: requests.Session, playlist_url: str) -> List[s
     with open("links.txt") as file:
         temp = file.readlines()
         temp = [link.strip() for link in temp]
+
+    os.unlink("links.txt")
 
     parsed_url = urlparse(playlist_url)
     base_url: str = f"{parsed_url.scheme}://{parsed_url.netloc}{'/'.join(parsed_url.path.split('/')[:-1])}/"

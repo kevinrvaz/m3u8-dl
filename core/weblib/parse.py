@@ -47,7 +47,11 @@ def construct_headers(header_path: str) -> Tuple[Dict[str, str], bool]:
             del header["cookie"]
 
         pprint(header)
-        print("press ctrl+c or ctrl+z if parsed headers are incorrect")
+        print(f"press ctrl+c or ctrl+z if parsed headers of type http2 {http2} are incorrect")
+
+        with open("headers", "wb") as file:
+            import pickle
+            pickle.dump(header, file)
 
         try:
             sleep(10)
@@ -57,4 +61,5 @@ def construct_headers(header_path: str) -> Tuple[Dict[str, str], bool]:
     else:
         print(f"Include headers in {header_path} directory and restart program")
         sys.exit()
+
     return header, http2

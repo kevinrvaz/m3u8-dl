@@ -6,9 +6,9 @@
       <change beforePath="$PROJECT_DIR$/core/download_process.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/download_process.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/m3u8dl.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/m3u8dl.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/m3u8lib/parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/m3u8lib/parser.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/producer_server_process.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/producer_server_process.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/video_handling_process.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/video_handling_process.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/weblib/fetch.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/weblib/fetch.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/weblib/parse.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/weblib/parse.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/headers.txt" beforeDir="false" afterPath="$PROJECT_DIR$/headers.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -38,7 +38,7 @@
       <recent name="$PROJECT_DIR$/core" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.main">
     <configuration name="download_process" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="m3u8-playlist-downloader" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -61,8 +61,31 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="m3u8-playlist-downloader" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.main" />
         <item itemvalue="Python.download_process" />
       </list>
     </recent_temporary>
@@ -105,7 +128,8 @@
       <workItem from="1582123404939" duration="1485000" />
       <workItem from="1582128541286" duration="1145000" />
       <workItem from="1583820622225" duration="27000" />
-      <workItem from="1585750519599" duration="7221000" />
+      <workItem from="1585750519599" duration="8178000" />
+      <workItem from="1585813757713" duration="7191000" />
     </task>
     <servers />
   </component>
@@ -129,45 +153,50 @@
       <screen x="65" y="28" width="1855" height="1052" />
     </state>
     <state x="775" y="312" width="424" height="484" key="FileChooserDialogImpl/65.28.1855.1052@65.28.1855.1052" timestamp="1583820643754" />
-    <state width="1809" height="317" key="GridCell.Tab.0.bottom" timestamp="1585758550714">
+    <state width="1554" height="203" key="GridCell.Tab.0.bottom" timestamp="1585814356265">
+      <screen x="1920" y="0" width="1600" height="900" />
+    </state>
+    <state width="1554" height="203" key="GridCell.Tab.0.bottom/65.28.1855.1052/1920.0.1600.900@1920.0.1600.900" timestamp="1585814356265" />
+    <state width="1809" height="317" key="GridCell.Tab.0.bottom/65.28.1855.1052/1920.0.1600.900@65.28.1855.1052" timestamp="1585762348964" />
+    <state width="1554" height="203" key="GridCell.Tab.0.center" timestamp="1585814356264">
+      <screen x="1920" y="0" width="1600" height="900" />
+    </state>
+    <state width="1554" height="203" key="GridCell.Tab.0.center/65.28.1855.1052/1920.0.1600.900@1920.0.1600.900" timestamp="1585814356264" />
+    <state width="1809" height="317" key="GridCell.Tab.0.center/65.28.1855.1052/1920.0.1600.900@65.28.1855.1052" timestamp="1585762348964" />
+    <state width="1554" height="203" key="GridCell.Tab.0.left" timestamp="1585814356264">
+      <screen x="1920" y="0" width="1600" height="900" />
+    </state>
+    <state width="1554" height="203" key="GridCell.Tab.0.left/65.28.1855.1052/1920.0.1600.900@1920.0.1600.900" timestamp="1585814356264" />
+    <state width="1809" height="317" key="GridCell.Tab.0.left/65.28.1855.1052/1920.0.1600.900@65.28.1855.1052" timestamp="1585762348964" />
+    <state width="1554" height="203" key="GridCell.Tab.0.right" timestamp="1585814356265">
+      <screen x="1920" y="0" width="1600" height="900" />
+    </state>
+    <state width="1554" height="203" key="GridCell.Tab.0.right/65.28.1855.1052/1920.0.1600.900@1920.0.1600.900" timestamp="1585814356265" />
+    <state width="1809" height="317" key="GridCell.Tab.0.right/65.28.1855.1052/1920.0.1600.900@65.28.1855.1052" timestamp="1585762348964" />
+    <state width="1809" height="317" key="GridCell.Tab.1.bottom" timestamp="1585762348964">
       <screen x="65" y="28" width="1855" height="1052" />
     </state>
-    <state width="1809" height="317" key="GridCell.Tab.0.bottom/65.28.1855.1052/1920.0.1600.900@65.28.1855.1052" timestamp="1585758550714" />
-    <state width="1809" height="317" key="GridCell.Tab.0.center" timestamp="1585758550713">
+    <state width="1809" height="317" key="GridCell.Tab.1.bottom/65.28.1855.1052/1920.0.1600.900@65.28.1855.1052" timestamp="1585762348964" />
+    <state width="1809" height="317" key="GridCell.Tab.1.center" timestamp="1585762348964">
       <screen x="65" y="28" width="1855" height="1052" />
     </state>
-    <state width="1809" height="317" key="GridCell.Tab.0.center/65.28.1855.1052/1920.0.1600.900@65.28.1855.1052" timestamp="1585758550713" />
-    <state width="1809" height="317" key="GridCell.Tab.0.left" timestamp="1585758550713">
+    <state width="1809" height="317" key="GridCell.Tab.1.center/65.28.1855.1052/1920.0.1600.900@65.28.1855.1052" timestamp="1585762348964" />
+    <state width="1809" height="317" key="GridCell.Tab.1.left" timestamp="1585762348964">
       <screen x="65" y="28" width="1855" height="1052" />
     </state>
-    <state width="1809" height="317" key="GridCell.Tab.0.left/65.28.1855.1052/1920.0.1600.900@65.28.1855.1052" timestamp="1585758550713" />
-    <state width="1809" height="317" key="GridCell.Tab.0.right" timestamp="1585758550713">
+    <state width="1809" height="317" key="GridCell.Tab.1.left/65.28.1855.1052/1920.0.1600.900@65.28.1855.1052" timestamp="1585762348964" />
+    <state width="1809" height="317" key="GridCell.Tab.1.right" timestamp="1585762348964">
       <screen x="65" y="28" width="1855" height="1052" />
     </state>
-    <state width="1809" height="317" key="GridCell.Tab.0.right/65.28.1855.1052/1920.0.1600.900@65.28.1855.1052" timestamp="1585758550713" />
-    <state width="1809" height="317" key="GridCell.Tab.1.bottom" timestamp="1585758550640">
-      <screen x="65" y="28" width="1855" height="1052" />
-    </state>
-    <state width="1809" height="317" key="GridCell.Tab.1.bottom/65.28.1855.1052/1920.0.1600.900@65.28.1855.1052" timestamp="1585758550640" />
-    <state width="1809" height="317" key="GridCell.Tab.1.center" timestamp="1585758550640">
-      <screen x="65" y="28" width="1855" height="1052" />
-    </state>
-    <state width="1809" height="317" key="GridCell.Tab.1.center/65.28.1855.1052/1920.0.1600.900@65.28.1855.1052" timestamp="1585758550640" />
-    <state width="1809" height="317" key="GridCell.Tab.1.left" timestamp="1585758550640">
-      <screen x="65" y="28" width="1855" height="1052" />
-    </state>
-    <state width="1809" height="317" key="GridCell.Tab.1.left/65.28.1855.1052/1920.0.1600.900@65.28.1855.1052" timestamp="1585758550640" />
-    <state width="1809" height="317" key="GridCell.Tab.1.right" timestamp="1585758550640">
-      <screen x="65" y="28" width="1855" height="1052" />
-    </state>
-    <state width="1809" height="317" key="GridCell.Tab.1.right/65.28.1855.1052/1920.0.1600.900@65.28.1855.1052" timestamp="1585758550640" />
+    <state width="1809" height="317" key="GridCell.Tab.1.right/65.28.1855.1052/1920.0.1600.900@65.28.1855.1052" timestamp="1585762348964" />
     <state width="498" height="446" key="SwitcherDM" timestamp="1581598830423">
       <screen x="65" y="28" width="1855" height="1052" />
     </state>
     <state width="498" height="446" key="SwitcherDM/65.28.1855.1052@65.28.1855.1052" timestamp="1581598830423" />
-    <state x="647" y="381" key="com.intellij.ide.util.TipDialog" timestamp="1583820630523">
-      <screen x="65" y="28" width="1855" height="1052" />
+    <state x="2422" y="302" key="com.intellij.ide.util.TipDialog" timestamp="1585813757728">
+      <screen x="1920" y="0" width="1600" height="900" />
     </state>
+    <state x="2422" y="302" key="com.intellij.ide.util.TipDialog/65.28.1855.1052/1920.0.1600.900@1920.0.1600.900" timestamp="1585813757728" />
     <state x="647" y="381" key="com.intellij.ide.util.TipDialog/65.28.1855.1052@65.28.1855.1052" timestamp="1583820630523" />
     <state x="527" y="244" width="920" height="620" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1581279266812">
       <screen x="65" y="28" width="1855" height="1052" />
@@ -177,12 +206,17 @@
       <screen x="65" y="28" width="1855" height="1052" />
     </state>
     <state x="759" y="469" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/65.28.1855.1052@65.28.1855.1052" timestamp="1581335706437" />
+    <state x="1920" y="0" width="884" height="900" key="find.popup" timestamp="1585818278530">
+      <screen x="1920" y="0" width="1600" height="900" />
+    </state>
+    <state x="1920" y="0" width="884" height="900" key="find.popup/65.28.1855.1052/1920.0.1600.900@1920.0.1600.900" timestamp="1585818278530" />
     <state x="655" y="260" width="672" height="678" key="search.everywhere.popup" timestamp="1581769005292">
       <screen x="65" y="28" width="1855" height="1052" />
     </state>
     <state x="655" y="260" width="672" height="678" key="search.everywhere.popup/65.28.1855.1052@65.28.1855.1052" timestamp="1581769005292" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/m3u8_playlist_downloader$download_process.coverage" NAME="download_process Coverage Results" MODIFIED="1585758550566" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/core" />
+    <SUITE FILE_PATH="coverage/m3u8_playlist_downloader$main.coverage" NAME="main Coverage Results" MODIFIED="1585813841319" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/m3u8_playlist_downloader$download_process.coverage" NAME="download_process Coverage Results" MODIFIED="1585813827886" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/core" />
   </component>
 </project>

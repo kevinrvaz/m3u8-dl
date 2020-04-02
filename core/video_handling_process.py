@@ -45,20 +45,6 @@ def get_task(total_links, file_meta_data, stop=False, debug=False):
 def start_process(total_links, file_name, convert, debug):
     file_meta_data = get_task(total_links, {}, False, debug)
 
-    # non_duplicates = []
-    #
-    # visited = {}
-    # graph = Graph(len(file_meta_data), list(file_meta_data.values()), directed=True)
-    # for file in file_meta_data.keys():
-    #     if file_meta_data[file] in visited:
-    #         graph.add_edge(str(file_meta_data[file]), file)
-    #     else:
-    #         graph.add_edge(str(file_meta_data[file]), file)
-    #         visited[file_meta_data[file]] = 1
-    # print(graph)
-    # for _, adjacent_nodes in graph:
-    #     non_duplicates.append(adjacent_nodes.keys()[0])
-
     with open("ts_list.txt", "w") as file:
         for file_path in sorted(list(file_meta_data.keys()), key=lambda k: file_meta_data[k]):
             file.write(f"file '{file_path}'\n")

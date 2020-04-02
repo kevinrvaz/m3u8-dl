@@ -1,5 +1,6 @@
 from urllib.parse import urlparse
 from typing import Optional
+from copy import copy
 import requests
 
 
@@ -32,16 +33,21 @@ def fetch_data(download_url: str, session: requests.Session,
 
     try:
         if http2:
-            timeout += 500
+            headers = session.headers.copy()
+
             if ":path" in session.headers:
-                parsed_url_path = urlparse(download_url).path
-                session.headers[":path"] = parsed_url_path
+                parsed_suffix = urlparse(download_url).path
+                headers[":path"] = parsed_suffix
+
+            new_session = copy(session)
+            new_session.headers = headers
+            session = new_session
 
             # if temp_adapter object gets called with the base class __init__ we call the temp_adapter
             # __init__ method.
-            temp_adapter = session.get_adapter(download_url)
-            if "connections" not in vars(temp_adapter):
-                temp_adapter.__init__()
+            session_adapter = session.get_adapter(download_url)
+            if "connections" not in vars(session_adapter):
+                session_adapter.__init__()
 
         request_data: requests.Response = session.get(download_url, timeout=timeout)
     except Exception:
