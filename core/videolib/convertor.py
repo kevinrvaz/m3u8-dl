@@ -47,4 +47,32 @@ def get_ts_start_time(file_path: str) -> float:
     cmd = "ffprobe {} -show_entries format=start_time -v quiet -of csv='p=0'" \
         .format(file_path)
     ts_time_stamp = subprocess.check_output(cmd, shell=True, close_fds=True)
-    return float(ts_time_stamp)
+    val = ts_time_stamp
+    try:
+        return float(val)
+    except ValueError:
+        return parse_png_to_mpeg2ts_stream(file_path)
+
+
+def parse_png_to_mpeg2ts_stream(file_path: str) -> float:
+    """
+    Parameters
+    ----------
+    file_path: str
+        The file_path to be converted to mpeg2-ts, note this function assumes that the file will
+        be detected as png due to starting bytes, and re parse it as mpeg2-ts
+
+    Returns
+    -------
+    float
+        The start time of the .ts file located at file_path
+    """
+
+    cmd = "ffmpeg -y -f mpegts -i {} -c copy {}.ts -v quiet".format(file_path, file_path)
+    subprocess.Popen(cmd, shell=True).wait()
+    cmd = "rm -rf {}".format(file_path)
+    subprocess.Popen(cmd, shell=True).wait()
+    cmd = "mv {}.ts {}".format(file_path, file_path)
+    subprocess.Popen(cmd, shell=True).wait()
+
+    return get_ts_start_time(file_path)

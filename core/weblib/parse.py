@@ -1,6 +1,7 @@
 from typing import Dict, Tuple
 from pprint import pprint
 from time import sleep
+
 import sys
 import os
 
@@ -48,10 +49,6 @@ def construct_headers(header_path: str) -> Tuple[Dict[str, str], bool]:
 
         pprint(header)
         print(f"press ctrl+c or ctrl+z if parsed headers of type http2 {http2} are incorrect")
-
-        with open("headers", "wb") as file:
-            import pickle
-            pickle.dump(header, file)
 
         try:
             sleep(10)

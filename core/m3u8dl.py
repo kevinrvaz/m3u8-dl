@@ -95,6 +95,7 @@ def main():
 
         server.join()
         video.join()
+
         rmtree(path_prefix)
     except (KeyboardInterrupt, Exception):
         print_exc()

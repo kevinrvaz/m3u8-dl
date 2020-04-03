@@ -4,6 +4,7 @@
       <w>acodec</w>
       <w>ffmpeg</w>
       <w>ffprobe</w>
+      <w>mpeg</w>
       <w>vcodec</w>
     </words>
   </dictionary>

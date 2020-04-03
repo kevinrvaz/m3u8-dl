@@ -35,8 +35,10 @@ def fetch_data(download_url: str, session: requests.Session,
             if ":path" in session.headers:
                 parsed_suffix = urlparse(download_url).path
                 session.headers[":path"] = parsed_suffix
-
         request_data: requests.Response = session.get(download_url, timeout=timeout)
+        if request_data.status_code == 302:
+            request_data = redirect_handler(session, request_data.content)
+
     except (ConnectionResetError, ConnectionRefusedError, ConnectionError,
             TimeoutError, ConnectionAbortedError, OSError):
         return download_url
@@ -45,3 +47,26 @@ def fetch_data(download_url: str, session: requests.Session,
         video_file.write(request_data.content.strip())
 
     return None
+
+
+def redirect_handler(session: requests.Session, request_body: bytes) -> requests.Response:
+    text = request_body.decode().split(" ")
+    url = text[-1]
+    parsed_url = urlparse(url)
+
+    authority = parsed_url.netloc
+    path = parsed_url.path
+    temp_auth = session.headers[":authority"]
+    temp_path = session.headers[":path"]
+    temp_origin = session.headers["origin"]
+
+    session.headers[":authority"] = authority
+    session.headers[":path"] = path
+    session.headers["origin"] = "null"
+
+    request_data = session.get(url)
+
+    session.headers[":authority"] = temp_auth
+    session.headers[":path"] = temp_path
+    session.headers["origin"] = temp_origin
+    return request_data

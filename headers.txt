@@ -1,15 +1,11 @@
-:authority: azdwy.mcloud.to
-:method: GET
-:path: /21/812d01ec7d9b5d87/8dd95aafc9c9c697e69908677c8df6ce8a216f9d0fe1bd0c30e52c2dda7fd7aa3375a6b62258ee3acc4176da1d7557a8bf5c8df1226dae7c1f3534c7fa6d72daff16c414e214fa0584715726720176cbdeb18279aec44a296b7127d4cdbe806f/hls/480/480.m3u8
-:scheme: https
-accept: */*
-accept-encoding: gzip, deflate, br
-accept-language: en-US,en;q=0.9
-cookie: __cf_bm=089835a0e9754b78a34a9842956329fe62c74d29-1585836448-1800-AWjcIBl6bDQ+R5GDgXq54RfLKba6YOKucad05UhfjvDa+T3ncA1dIPhVIsYnFE1FXzas20VKaV+JRS+sFl7q+XT6HoECXYuiY6lS5VROdJmK
-dnt: 1
-origin: https://mcloud.to
-referer: https://mcloud.to/embed/827q1v?key=7bc55923f633a309a9e5b320cf30a1d4&site=gogoanime
-sec-fetch-dest: empty
-sec-fetch-mode: cors
-sec-fetch-site: same-site
-user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.9
+Connection: keep-alive
+DNT: 1
+Host: hls13x.cdnfile.info
+Origin: https://vidstreaming.io
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: cross-site
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36

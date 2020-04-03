@@ -113,12 +113,10 @@ def process_pool_executor_handler(executor: ProcessPoolExecutor, manager: Downlo
               f"process")
 
         if len(manager.error_links):
-            shuffle(manager.error_links)
             download_links = manager.error_links.copy()
             manager.error_links = []
         else:
             download_links = manager.get_download_links().copy()
-            shuffle(download_links)
 
         process_futures: List[Future] = []
 
@@ -167,6 +165,7 @@ def process_pool_executor_handler(executor: ProcessPoolExecutor, manager: Downlo
 def start_threads(links: List[str], maps: Dict[str, str], session: requests.Session,
                   file_path_prefix: str, http2: bool, debug: bool = False,
                   cpu_num: int = 0) -> List[Optional[str]]:
+
     failed_links = Queue()
 
     def update_hook(future: Future):
