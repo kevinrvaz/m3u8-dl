@@ -38,6 +38,8 @@ def fetch_data(download_url: str, session: requests.Session,
         request_data: requests.Response = session.get(download_url, timeout=timeout)
         if request_data.status_code == 302:
             request_data = redirect_handler(session, request_data.content)
+        elif request_data.status_code == 403:
+            raise ConnectionAbortedError("403")
 
     except (ConnectionResetError, ConnectionRefusedError, ConnectionError,
             TimeoutError, ConnectionAbortedError, OSError):
@@ -65,6 +67,9 @@ def redirect_handler(session: requests.Session, request_body: bytes) -> requests
     session.headers["origin"] = "null"
 
     request_data = session.get(url)
+
+    if request_data.status_code != 200:
+        print(url, session.headers)
 
     session.headers[":authority"] = temp_auth
     session.headers[":path"] = temp_path

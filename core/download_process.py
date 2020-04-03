@@ -3,7 +3,6 @@ from multiprocessing import current_process, JoinableQueue
 from typing import List, Dict, Optional
 from hyper.contrib import HTTP20Adapter
 from traceback import print_exc
-from random import shuffle
 from queue import Queue
 from math import ceil
 from time import time

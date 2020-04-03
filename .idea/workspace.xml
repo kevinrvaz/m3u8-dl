@@ -2,15 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b9df719f-adfc-42fb-9e8a-e0d724354e83" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/kevin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/kevin.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/download_process.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/download_process.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/m3u8dl.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/m3u8dl.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/m3u8lib/parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/m3u8lib/parser.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/videolib/convertor.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/videolib/convertor.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/weblib/fetch.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/weblib/fetch.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/weblib/parse.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/weblib/parse.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/headers.txt" beforeDir="false" afterPath="$PROJECT_DIR$/headers.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -133,7 +127,8 @@
       <workItem from="1585750519599" duration="8178000" />
       <workItem from="1585813757713" duration="8255000" />
       <workItem from="1585824988064" duration="14608000" />
-      <workItem from="1585889820556" duration="1746000" />
+      <workItem from="1585889820556" duration="2823000" />
+      <workItem from="1585901931298" duration="4348000" />
     </task>
     <servers />
   </component>
@@ -197,10 +192,10 @@
       <screen x="65" y="28" width="1855" height="1052" />
     </state>
     <state width="498" height="446" key="SwitcherDM/65.28.1855.1052@65.28.1855.1052" timestamp="1581598830423" />
-    <state x="2422" y="302" key="com.intellij.ide.util.TipDialog" timestamp="1585889820095">
+    <state x="2422" y="302" key="com.intellij.ide.util.TipDialog" timestamp="1585901933668">
       <screen x="1920" y="0" width="1600" height="900" />
     </state>
-    <state x="2422" y="302" key="com.intellij.ide.util.TipDialog/65.28.1855.1052/1920.0.1600.900@1920.0.1600.900" timestamp="1585889820095" />
+    <state x="2422" y="302" key="com.intellij.ide.util.TipDialog/65.28.1855.1052/1920.0.1600.900@1920.0.1600.900" timestamp="1585901933668" />
     <state x="647" y="381" key="com.intellij.ide.util.TipDialog/65.28.1855.1052@65.28.1855.1052" timestamp="1583820630523" />
     <state x="527" y="244" width="920" height="620" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1581279266812">
       <screen x="65" y="28" width="1855" height="1052" />
