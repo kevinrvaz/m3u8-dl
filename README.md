@@ -8,6 +8,7 @@ a CLI program to download videos in a m3u8 playlist, write it to a single video 
 ## Usage without installation
 - create a virtual environment using `virtualenv -p python3.6 venv` in terminal<br/>
 - activate virtual environment using `source venv/bin/activate` in terminal<br/>
+- compile shared libraries using ` python setup.py build_ext --inplace`
 - install dependencies
 - insert the url request headers in headers.txt<br/>
 - start the script using `python main.py <url of playlist>`

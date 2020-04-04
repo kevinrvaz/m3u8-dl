@@ -107,7 +107,7 @@ def process_pool_executor_handler(executor: ProcessPoolExecutor, manager: Downlo
     while manager.done_retries != manager.max_retries:
         print(f"Starting download {manager.get_total_links() - manager.get_total_downloaded_links_count()} links left")
         available_cpus = list(os.sched_getaffinity(os.getpid()))
-        print(f"available cpu's {available_cpus}, initializing {5 * manager.get_process_num()}"
+        print(f"available cpu's {available_cpus}, initializing {4 * manager.get_process_num()}"
               f" threads with {manager.get_thread_num()} links per "
               f"process")
 
@@ -141,7 +141,6 @@ def process_pool_executor_handler(executor: ProcessPoolExecutor, manager: Downlo
         while not done_queue.empty():
             link = done_queue.get()
             manager.error_links.append(link)
-            done_queue.task_done()
 
         manager.set_total_downloaded_links_count(manager.get_total_links() - len(manager.error_links))
 
@@ -166,6 +165,7 @@ def start_threads(links: List[str], maps: Dict[str, str], session: requests.Sess
                   cpu_num: int = 0) -> List[Optional[str]]:
 
     failed_links = Queue()
+    sessions_queue = Queue()
 
     def update_hook(future: Future):
         temp = future.result()
@@ -176,16 +176,14 @@ def start_threads(links: List[str], maps: Dict[str, str], session: requests.Sess
 
     os.sched_setaffinity(os.getpid(), {cpu_num})
 
-    sessions = []
-
-    THREAD_WORKERS: int = 5
+    THREAD_WORKERS: int = 4
 
     if http2:
         for _ in range(THREAD_WORKERS):
             sess = requests.Session()
             sess.mount("https://", HTTP20Adapter(max_retries=10))
             sess.headers = copy(session.headers)
-            sessions.append(sess)
+            sessions_queue.put(sess)
 
     with ThreadPoolExecutor(max_workers=THREAD_WORKERS) as executor:
         for i, link in enumerate(links):
@@ -193,11 +191,12 @@ def start_threads(links: List[str], maps: Dict[str, str], session: requests.Sess
             sent_links[link] = temp_path
 
             if http2:
-                new_session = sessions[i % THREAD_WORKERS]
+                new_session = None
             else:
                 new_session = session
 
-            thread_future = executor.submit(download_thread, temp_path, link, new_session, http2)
+            thread_future = executor.submit(download_thread, temp_path, link, new_session,
+                                            http2, sessions_queue)
             thread_future.add_done_callback(update_hook)
 
     failed = []
@@ -218,9 +217,17 @@ def start_threads(links: List[str], maps: Dict[str, str], session: requests.Sess
     return failed
 
 
-def download_thread(file_path: str, link: str,
-                    session: requests.Session, http2: bool) -> Optional[str]:
+def download_thread(file_path: str, link: str, session: requests.Session,
+                    http2: bool, s_queue: Queue) -> Optional[str]:
     if os.path.exists(file_path):
         return None
 
-    return fetch_data(link, session, 120, file_path, http2)
+    if not session and http2:
+        session = s_queue.get()
+
+    done_url = fetch_data(link, session, 120, file_path, http2)
+
+    if http2 and session:
+        s_queue.put(session)
+
+    return done_url

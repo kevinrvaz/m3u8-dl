@@ -1,6 +1,7 @@
 from urllib.parse import urlparse
 from typing import Optional
 
+import write_file_no_gil
 import requests
 
 
@@ -35,29 +36,34 @@ def fetch_data(download_url: str, session: requests.Session,
             if ":path" in session.headers:
                 parsed_suffix = urlparse(download_url).path
                 session.headers[":path"] = parsed_suffix
-        request_data: requests.Response = session.get(download_url, timeout=timeout)
+
+        request_data = session.get(download_url, timeout=timeout)
+
         if request_data.status_code == 302:
             request_data = redirect_handler(session, request_data.content)
-        elif request_data.status_code == 403:
-            raise ConnectionAbortedError("403")
 
     except (ConnectionResetError, ConnectionRefusedError, ConnectionError,
             TimeoutError, ConnectionAbortedError, OSError):
         return download_url
 
-    with open(file_path, "wb") as video_file:
-        video_file.write(request_data.content.strip())
+    if type(request_data) == bytes:
+        data = request_data
+    else:
+        data = request_data.content
+
+    write_file_no_gil.write_file(file_path, data)
 
     return None
 
 
-def redirect_handler(session: requests.Session, request_body: bytes) -> requests.Response:
+def redirect_handler(session: requests.Session, request_body: bytes, retry: int = 5) -> bytes:
     text = request_body.decode().split(" ")
     url = text[-1]
     parsed_url = urlparse(url)
 
     authority = parsed_url.netloc
     path = parsed_url.path
+
     temp_auth = session.headers[":authority"]
     temp_path = session.headers[":path"]
     temp_origin = session.headers["origin"]
@@ -68,10 +74,13 @@ def redirect_handler(session: requests.Session, request_body: bytes) -> requests
 
     request_data = session.get(url)
 
-    if request_data.status_code != 200:
-        print(url, session.headers)
-
     session.headers[":authority"] = temp_auth
     session.headers[":path"] = temp_path
     session.headers["origin"] = temp_origin
-    return request_data
+
+    if request_data.status_code == 403:
+        raise ConnectionAbortedError("403")
+    elif request_data.status_code == 302 and retry:
+        return redirect_handler(session, request_data.content, retry - 1)
+
+    return request_data.content
