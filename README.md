@@ -1,16 +1,17 @@
-# m3u8-playlist-downloader
+# m3u8-dl
 a CLI program to download videos in a m3u8 playlist, write it to a single video file and convert it to mp4 using ffmpeg 
 
 ## Dependencies
-- Install python external modules using `pip install -r requirements.txt` after activating virtualenv<br>
-- FFMPEG for video conversion, visit https://www.ffmpeg.org/download.html<br>
+- Install python external modules using `pip install -r requirements.txt` after activating virtualenv
+- FFMPEG for video conversion, visit https://www.ffmpeg.org/download.html
 
-## Usage without installation
-- create a virtual environment using `virtualenv -p python3.6 venv` in terminal<br/>
-- activate virtual environment using `source venv/bin/activate` in terminal<br/>
+## Usage without installation in Ubuntu
+- clone the repository using `git clone <ssh/https url>`
+- create a virtual environment using `virtualenv -p python3.6 venv` in terminal
+- activate virtual environment using `source venv/bin/activate` in terminal
+- install dependencies using `pip install -r requirements.txt`
 - compile shared libraries using ` python setup.py build_ext --inplace`
-- install dependencies
-- insert the url request headers in headers.txt<br/>
+- insert the url request headers in headers.txt
 - start the script using `python main.py <url of playlist>`
 
 ## Installing/Uninstalling
@@ -21,14 +22,13 @@ for installation in ubuntu using PyInstaller:-
 - run `sudo mv dist/m3u8-dl /usr/local/bin/` in terminal window.
 - now that the program is installed globally you can start the program using `m3u8-dl` in the terminal
 
-for uninstall in ubuntu:-
+for uninstalling in ubuntu:-
 - run `sudo rm /usr/local/bin/m3u8-dl`
 
 ## CLI Options
     --help, -h:- display how to use the script
-    --convert, -c:- specify this flag to convert the video to mp4 using ffmpeg`<br>
-    --name, -n:- specify the name by which to save the downloaded video, ele 'video' is chosen as default name`<br>
-    --header-path, -p:- specify the path of header file`<br>
-    --force, -f:- specify to re-download the video if it exists`<br>
+    --convert, -c:- specify this flag to convert the video to mp4 using ffmpeg`
+    --name, -n:- specify the name by which to save the downloaded video, ele 'video' is chosen as default name`
+    --header-path, -p:- specify the path of header file`
     --retry, -r:- specify number of retries, by default 5 retries will be initiated
     --debug, -d:- print helpful messages to console to understand program flow
