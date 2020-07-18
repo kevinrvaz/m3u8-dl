@@ -1,4 +1,6 @@
 # m3u8-dl
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/5b9b59ec733049be8c72c402b54af111)](https://www.codacy.com/manual/excalibur.krv/m3u8-dl?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=excalibur-kvrv/m3u8-dl&amp;utm_campaign=Badge_Grade)
+
 a CLI program to download videos in a m3u8 playlist, write it to a single video file and convert it to mp4 using ffmpeg 
 
 ## Dependencies
