@@ -3,9 +3,10 @@ from traceback import print_exc
 from queue import Queue
 from typing import Any
 
-from .common.constants import PORT, HEADER_SIZE
+from .common.constants import PORT, HEADER_SIZE,IP
 from .common.base import Server
 
+import platform
 import pickle
 import socket
 import sys
@@ -171,7 +172,10 @@ class ProducerServerProcess:
 def producer_server_process(debug=False):
     """A function that starts the ProducerServerProcess"""
     print(f"Started Producer Process {current_process().name}")
-    producer = ProducerServerProcess("", PORT)
+    if platform.system() == "Windows":
+        producer = ProducerServerProcess(IP, PORT)
+    else:
+        producer = ProducerServerProcess("", PORT)
 
     try:
 
