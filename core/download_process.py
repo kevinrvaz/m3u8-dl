@@ -12,6 +12,7 @@ from .common.constants import IP, PORT, HEADER_SIZE
 from .weblib.fetch import fetch_data
 from .common.base import Client
 
+import platform
 import requests
 import pickle
 import sys
@@ -51,7 +52,7 @@ class DownloadProcess:
         self.http2: bool = http2
         self.convert = convert
         self.__sent = 0
-        self.__process_num = len(os.sched_getaffinity(os.getpid()))
+        self.__process_num = 4 if platform.system() == "Windows" else len(os.sched_getaffinity(os.getpid()))
         self.__thread_num = int(ceil((total_links - self.__sent) / self.__process_num))
         self.debug = debug
         self.done_retries = 0
@@ -106,7 +107,7 @@ def process_pool_executor_handler(executor: ProcessPoolExecutor, manager: Downlo
 
     while manager.done_retries != manager.max_retries:
         print(f"Starting download {manager.get_total_links() - manager.get_total_downloaded_links_count()} links left")
-        available_cpus = list(os.sched_getaffinity(os.getpid()))
+        available_cpus = [0, 1, 2, 3] if platform.system() == "Windows" else list(os.sched_getaffinity(os.getpid()))
         print(f"available cpu's {available_cpus}, initializing {4 * manager.get_process_num()}"
               f" threads with {manager.get_thread_num()} links per "
               f"process")
@@ -173,8 +174,9 @@ def start_threads(links: List[str], maps: Dict[str, str], session: requests.Sess
             failed_links.put(temp)
 
     sent_links = {}
-
-    os.sched_setaffinity(os.getpid(), {cpu_num})
+    if platform.system() != "Windows":
+        os.sched_setaffinity(os.getpid(), {cpu_num})
+    
 
     THREAD_WORKERS: int = 4
 

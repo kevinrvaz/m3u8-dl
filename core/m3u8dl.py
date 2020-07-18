@@ -10,6 +10,7 @@ from .video_handling_process import video_handling
 from .download_process import download_process
 from .weblib.parse import construct_headers
 
+import platform
 import requests
 import argparse
 import sys
@@ -75,10 +76,15 @@ def main():
 
     sess.headers = headers
 
-    links = fetch_playlist_links(sess, url)
+    links = fetch_playlist_links(sess, url,True)
     file_link_maps = construct_file_name_links_map(links)
-    path_prefix = "." + "".join([i for i in url if i.isalnum()])
+    path_prefix = "".join([i for i in url if i.isalnum()])
+    if platform.system() == "Windows":
+        path_prefix = path_prefix[:10]
+    else:
+        path_prefix = "." + path_prefix
 
+   
     os.makedirs(path_prefix, exist_ok=True)
 
     try:

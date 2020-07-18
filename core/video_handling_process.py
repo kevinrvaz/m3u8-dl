@@ -4,9 +4,10 @@ from random import randint
 from time import sleep
 
 from .videolib.convertor import convert_video, concat_all_ts, get_ts_start_time
-from .common.constants import PORT
+from .common.constants import PORT,IP
 from .common.base import Client
 
+import platform
 import sys
 
 
@@ -14,7 +15,10 @@ def get_task(total_links, file_meta_data, stop=False, debug=False):
     while not stop:
         try:
             while True:
-                client = Client("", PORT)
+                if platform.system() == "Windows":
+                    client = Client(IP, PORT)
+                else:
+                    client = Client("", PORT)
                 client.send_data("GET_FILENAME_QUEUE")
                 data = client.receive_data()
                 if debug:
@@ -50,8 +54,11 @@ def start_process(total_links, file_name, convert, debug):
     with open("ts_list.txt", "w") as file:
         for file_path in sorted(list(file_meta_data.keys()), key=lambda k: file_meta_data[k]):
             file.write(f"file '{file_path}'\n")
-
-    client = Client("", PORT)
+    
+    if platform.system() == "Windows":
+        client = Client(IP, PORT)
+    else:
+        client = Client("", PORT)
     client.send_data("STOP")
 
     if debug:
