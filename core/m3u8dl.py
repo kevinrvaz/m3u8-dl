@@ -67,6 +67,7 @@ def main():
         MAX_RETRIES = cli_args.retry
 
     headers, http2 = construct_headers(path)
+    debug = cli_args.debug
 
     # Mount new connection adapters to the session created.
     sess: requests.Session = requests.Session()
@@ -76,19 +77,18 @@ def main():
 
     sess.headers = headers
 
-    links = fetch_playlist_links(sess, url,True)
+    links = fetch_playlist_links(sess, url, debug)
     file_link_maps = construct_file_name_links_map(links)
     path_prefix = "".join([i for i in url if i.isalnum()])
+
     if platform.system() == "Windows":
         path_prefix = path_prefix[:10]
     else:
         path_prefix = "." + path_prefix
 
-   
     os.makedirs(path_prefix, exist_ok=True)
 
     try:
-        debug = cli_args.debug
         server = Process(target=producer_server_process, args=(debug,), name="producer_server_process")
         server.start()
 

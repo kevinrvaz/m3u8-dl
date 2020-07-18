@@ -172,6 +172,7 @@ class ProducerServerProcess:
 def producer_server_process(debug=False):
     """A function that starts the ProducerServerProcess"""
     print(f"Started Producer Process {current_process().name}")
+
     if platform.system() == "Windows":
         producer = ProducerServerProcess(IP, PORT)
     else:

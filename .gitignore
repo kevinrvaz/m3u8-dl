@@ -133,3 +133,5 @@ headers
 *.mp4
 *.ts
 write_file_no_gil.c
+.idea/
+.vscode/

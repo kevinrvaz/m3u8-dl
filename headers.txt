@@ -1,0 +1,12 @@
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Connection: keep-alive
+DNT: 1
+Host: hls10xx.cdnfile.info
+Origin: https://vidstreaming.io
+Referer: https://vidstreaming.io/load.php?id=MTA1NDc3&title=Fate%2Fstay+night+Movie%3A+Heaven%27s+Feel+-+I.+Presage+Flower+Episode+1
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: cross-site
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36

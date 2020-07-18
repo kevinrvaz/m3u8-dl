@@ -2,17 +2,19 @@
 a CLI program to download videos in a m3u8 playlist, write it to a single video file and convert it to mp4 using ffmpeg 
 
 ## Dependencies
-- Install python external modules using `pip install -r requirements.txt` after activating virtualenv
-- FFMPEG for video conversion, visit https://www.ffmpeg.org/download.html
+- Install python external modules using `pip install -r requirements.txt` after activating virtualenv.
+- FFMPEG for video conversion, visit https://www.ffmpeg.org/download.html.
+- Visit https://www.wikihow.com/Install-FFmpeg-on-Windows for FFMPEG setup on windows.
+- Visit https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/#creating-a-virtual-environment for instructions on how to use virtualenv. 
 
-## Usage without installation in Ubuntu
-- clone the repository using `git clone <ssh/https url>`
-- create a virtual environment using `virtualenv -p python3.6 venv` in terminal
-- activate virtual environment using `source venv/bin/activate` in terminal
-- install dependencies using `pip install -r requirements.txt`
-- compile shared libraries using ` python setup.py build_ext --inplace`
-- insert the url request headers in headers.txt
-- start the script using `python main.py <url of playlist>`
+## Usage
+- clone the repository using `git clone "ssh/https url"`.
+- create a virtual environment using `virtualenv -p python3.6 venv` in linux terminal, see 'Dependecies' for platform specific instructions.
+- activate virtual environment using `source venv/bin/activate` in linux terminal, see 'Dependecies' for platform specific instructions.
+- install dependencies using `pip install -r requirements.txt`.
+- compile shared libraries using ` python setup.py build_ext --inplace`.
+- insert the url request headers in headers.txt.
+- start the script using `python main.py <url of playlist>`.
 
 ## Installing/Uninstalling
 for installation in ubuntu using PyInstaller:-

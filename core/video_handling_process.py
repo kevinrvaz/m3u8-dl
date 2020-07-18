@@ -19,6 +19,7 @@ def get_task(total_links, file_meta_data, stop=False, debug=False):
                     client = Client(IP, PORT)
                 else:
                     client = Client("", PORT)
+
                 client.send_data("GET_FILENAME_QUEUE")
                 data = client.receive_data()
                 if debug:
@@ -59,6 +60,7 @@ def start_process(total_links, file_name, convert, debug):
         client = Client(IP, PORT)
     else:
         client = Client("", PORT)
+
     client.send_data("STOP")
 
     if debug:

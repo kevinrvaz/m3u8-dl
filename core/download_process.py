@@ -164,7 +164,6 @@ def process_pool_executor_handler(executor: ProcessPoolExecutor, manager: Downlo
 def start_threads(links: List[str], maps: Dict[str, str], session: requests.Session,
                   file_path_prefix: str, http2: bool, debug: bool = False,
                   cpu_num: int = 0) -> List[Optional[str]]:
-
     failed_links = Queue()
     sessions_queue = Queue()
 
@@ -176,7 +175,6 @@ def start_threads(links: List[str], maps: Dict[str, str], session: requests.Sess
     sent_links = {}
     if platform.system() != "Windows":
         os.sched_setaffinity(os.getpid(), {cpu_num})
-    
 
     THREAD_WORKERS: int = 4
 
