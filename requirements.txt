@@ -5,7 +5,7 @@ h2==2.6.2
 hpack==3.0.0
 hyper==0.7.0
 hyperframe==3.2.0
-idna==2.8
+idna==2.10
 PyInstaller==3.6
 requests==2.24.0
 urllib3==1.25.8
