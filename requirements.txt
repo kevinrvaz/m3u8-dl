@@ -7,6 +7,6 @@ hyper==0.7.0
 hyperframe==3.2.0
 idna==2.8
 PyInstaller==3.6
-requests==2.22.0
+requests==2.24.0
 urllib3==1.25.8
 Cython
