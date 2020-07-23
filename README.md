@@ -1,5 +1,10 @@
 # m3u8-dl
+
+[![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/) <br>
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/5b9b59ec733049be8c72c402b54af111)](https://www.codacy.com/manual/excalibur.krv/m3u8-dl?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=excalibur-kvrv/m3u8-dl&amp;utm_campaign=Badge_Grade)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/excalibur-kvrv/m3u8-dl/graphs/commit-activity)
+[![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
+
 
 a CLI program to download videos in a m3u8 playlist, write it to a single video file and convert it to mp4 using ffmpeg. Read about m3u8 here https://en.wikipedia.org/wiki/M3U#M3U8
 
@@ -32,7 +37,7 @@ for uninstalling in ubuntu:-
 ## CLI Options
     --help, -h:- display how to use the script
     --convert, -c:- specify this flag to convert the video to mp4 using ffmpeg`
-    --name, -n:- specify the name by which to save the downloaded video, ele 'video' is chosen as default name`
+    --name, -n:- specify the name by which to save the downloaded video, else 'video' is chosen as default name`
     --header-path, -p:- specify the path of header file`
     --retry, -r:- specify number of retries, by default 5 retries will be initiated
     --debug, -d:- print helpful messages to console to understand program flow
