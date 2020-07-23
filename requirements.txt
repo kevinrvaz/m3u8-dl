@@ -1,7 +1,7 @@
 altgraph==0.17
 certifi==2019.11.28
 chardet==3.0.4
-h2==2.6.2
+h2==3.2.0
 hpack==3.0.0
 hyper==0.7.0
 hyperframe==3.2.0
