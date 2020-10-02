@@ -186,7 +186,7 @@ def start_threads(links: List[str], maps: Dict[str, str], session: requests.Sess
             sessions_queue.put(sess)
 
     with ThreadPoolExecutor(max_workers=THREAD_WORKERS) as executor:
-        for i, link in enumerate(links):
+        for link in links:
             temp_path = os.path.join(file_path_prefix, maps[link])
             sent_links[link] = temp_path
 

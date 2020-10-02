@@ -46,7 +46,7 @@ def fetch_data(download_url: str, session: requests.Session,
             TimeoutError, ConnectionAbortedError, OSError):
         return download_url
 
-    if type(request_data) == bytes:
+    if isinstance(request_data, bytes):
         data = request_data
     else:
         data = request_data.content
