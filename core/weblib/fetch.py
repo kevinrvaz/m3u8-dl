@@ -4,7 +4,6 @@ from typing import Optional
 import write_file_no_gil
 import requests
 
-
 def fetch_data(download_url: str, session: requests.Session,
                timeout: int, file_path: str, http2: bool) -> Optional[str]:
     """
@@ -37,21 +36,21 @@ def fetch_data(download_url: str, session: requests.Session,
                 parsed_suffix = urlparse(download_url).path
                 session.headers[":path"] = parsed_suffix
 
-        request_data = session.get(download_url, timeout=timeout)
-
-        if request_data.status_code == 302:
-            request_data = redirect_handler(session, request_data.content)
+        with session.get(download_url, timeout=timeout, stream=True) as r:
+            r.raise_for_status()
+            
+            if r.status_code == 302:
+                r = redirect_handler(session, r.content)
+        
+            with open(file_path, "wb") as f: 
+                for chunk in r.iter_content(1024):
+                    if not chunk:
+                        break
+                    f.write(chunk)
 
     except (ConnectionResetError, ConnectionRefusedError, ConnectionError,
             TimeoutError, ConnectionAbortedError, OSError):
         return download_url
-
-    if type(request_data) == bytes:
-        data = request_data
-    else:
-        data = request_data.content
-
-    write_file_no_gil.write_file(file_path, data)
 
     return None
 
