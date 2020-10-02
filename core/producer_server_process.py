@@ -13,7 +13,8 @@ import sys
 
 
 def send_data(client: socket.socket, data: str) -> None:
-    """Abstract the sending of data to the client.
+    """
+    Abstract the sending of data to the client.
 
     Parameters
     ----------
@@ -28,7 +29,8 @@ def send_data(client: socket.socket, data: str) -> None:
 
 
 def receive_data(client: socket.socket, d_type: str = "str", debug: bool = False) -> Any:
-    """Abstract receiving data from client.
+    """
+    Abstract receiving data from client.
 
     Parameters
     ----------
@@ -66,7 +68,8 @@ def receive_data(client: socket.socket, d_type: str = "str", debug: bool = False
 
 
 class ProducerServerProcess:
-    """Producer Server Process.
+    """
+    Producer Server Process.
 
     A class that models a server that acts as a way of passing messages between download_process and
     video_handling process.
@@ -95,7 +98,8 @@ class ProducerServerProcess:
     """
 
     def __init__(self, ip: str, port: int):
-        """Initialize object of ProducerServerProcess to ip and port parameters.
+        """
+        Initialize object of ProducerServerProcess to ip and port parameters.
 
         Parameters
         ----------
@@ -130,7 +134,8 @@ class ProducerServerProcess:
                 sys.exit()
 
     def process_action(self, action: str, client: socket.socket) -> None:
-        """Perform actions depending on the flow of file.
+        """
+        Perform actions depending on the flow of file.
 
         Parameters
         ----------
