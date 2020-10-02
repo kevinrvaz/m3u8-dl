@@ -5,7 +5,7 @@ import os
 
 
 def fetch_playlist_links(session: requests.Session, playlist_url: str, keep: bool = False) -> List[str]:
-    """ Fetches the m3u8 playlist from the playlist_url
+    """Fetches the m3u8 playlist from the playlist_url
 
     Parameters
     ----------
@@ -45,7 +45,7 @@ def fetch_playlist_links(session: requests.Session, playlist_url: str, keep: boo
 
 
 def construct_file_name_links_map(links: List[str]) -> Dict[str, str]:
-    """ Construct a dictionary with link to file name mappings
+    """Construct a dictionary with link to file name mappings
 
     Parameters
     ----------

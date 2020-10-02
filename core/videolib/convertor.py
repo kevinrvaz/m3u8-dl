@@ -3,7 +3,7 @@ import os
 
 
 def concat_all_ts(video_file: str) -> None:
-    """
+    """Concat all .ts chunks
     Parameters
     ----------
     video_file: str
@@ -16,7 +16,7 @@ def concat_all_ts(video_file: str) -> None:
 
 
 def convert_video(video_input: str, video_output: str) -> None:
-    """
+    """Convert .ts to .mp4
     Parameters
     ----------
     video_input : str
@@ -32,7 +32,7 @@ def convert_video(video_input: str, video_output: str) -> None:
 
 
 def get_ts_start_time(file_path: str) -> float:
-    """
+    """Parse the downloaded file
     Parameters
     ----------
     file_path : str
@@ -49,7 +49,7 @@ def get_ts_start_time(file_path: str) -> float:
 
 
 def parse_png_to_mpeg2ts_stream(file_path: str) -> None:
-    """
+    """Strip mpeg2-ts from downloaded file
     Parameters
     ----------
     file_path: str

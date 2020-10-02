@@ -7,7 +7,7 @@ import os
 
 
 def construct_headers(header_path: str) -> Tuple[Dict[str, str], bool]:
-    """
+    """Construct headers
     Parameters
     ----------
     header_path: str

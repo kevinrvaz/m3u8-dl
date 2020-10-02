@@ -13,7 +13,7 @@ import sys
 
 
 def send_data(client: socket.socket, data: str) -> None:
-    """ A function used to abstract the sending of data to the client
+    """A function used to abstract the sending of data to the client
 
     Parameters
     ----------
@@ -29,7 +29,7 @@ def send_data(client: socket.socket, data: str) -> None:
 
 
 def receive_data(client: socket.socket, d_type: str = "str", debug: bool = False) -> Any:
-    """ A function used to abstract receiving data from client
+    """A function used to abstract receiving data from client
 
     Parameters
     ----------
@@ -67,6 +67,7 @@ def receive_data(client: socket.socket, d_type: str = "str", debug: bool = False
 
 
 class ProducerServerProcess:
+
     """
     A class that models a server that acts as a way of passing messages between download_process and
     video_handling process
