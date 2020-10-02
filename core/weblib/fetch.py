@@ -40,7 +40,6 @@ def fetch_data(download_url: str, session: requests.Session,
             r.raise_for_status()
             if r.status_code == 302:
                 r = redirect_handler(session, r.content)
-        
             with open(file_path, "wb") as f:
                 for chunk in r.iter_content(1024):
                     if not chunk:
