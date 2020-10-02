@@ -45,8 +45,9 @@ class DownloadProcess:
     def __init__(self, links: List[str], total_links: int, session: requests.Session,
                  http2: bool = False, max_retries: int = 5,
                  convert: bool = True, debug: bool = False):
-
         """
+        Initialize Object of DownloadProcess.
+
         Parameters
         ----------
         links: List[str]
@@ -64,7 +65,6 @@ class DownloadProcess:
         debug: bool
             A flag to print messages to the console
         """
-
         self.__session: requests.Session = session
         self.__total_links: int = total_links
         self.__links: List[str] = links
