@@ -22,7 +22,7 @@ class BaseSocketServer:
         A method to receive data from the connected socket.
     """
 
-    def __int__(self, soc: socket.socket):
+    def __init__(self, soc: socket.socket):
         """
         Parameters
         ----------
