@@ -3,6 +3,7 @@ import socket
 
 
 class BaseSocketServer:
+
     """
     A class used to abstract the sending and receiving of data via a socket.
 
@@ -77,6 +78,7 @@ class BaseSocketServer:
 
 
 class Server(BaseSocketServer):
+
     """
     A class used to abstract the socket that will act as the server.
 
@@ -103,6 +105,7 @@ class Server(BaseSocketServer):
 
 
 class Client(BaseSocketServer):
+
     """
     A class used to abstract the socket that will connect with the server.
 

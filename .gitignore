@@ -135,3 +135,5 @@ headers
 write_file_no_gil.c
 .idea/
 .vscode/
+
+*venv*
