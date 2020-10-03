@@ -8,6 +8,8 @@ import os
 
 def construct_headers(header_path: str) -> Tuple[Dict[str, str], bool]:
     """
+    Construct headers from Header file.
+
     Parameters
     ----------
     header_path: str
@@ -18,7 +20,6 @@ def construct_headers(header_path: str) -> Tuple[Dict[str, str], bool]:
     Tuple[Dict[str, str], bool]
         Returns a tuple containing the headers and http2 variable
     """
-
     http2 = False
     header: Dict[str, str] = {}
 

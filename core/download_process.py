@@ -45,6 +45,25 @@ class DownloadProcess:
     def __init__(self, links: List[str], total_links: int, session: requests.Session,
                  http2: bool = False, max_retries: int = 5,
                  convert: bool = True, debug: bool = False):
+        """Initialize Object of DownloadProcess.
+
+        Parameters
+        ----------
+        links: List[str]
+            The links to be downloaded
+        total_links: int
+            The number of links to be downloaded
+        session: requests.Session
+            The session using which all the links will be downloaded
+        http2: bool
+            A flag to keep track of the type of http headers
+        max_retries: int
+            The maximum number of retries for a particular link
+        convert: bool
+            A flag to keep track of the whether the downloaded video should be converted
+        debug: bool
+            A flag to print messages to the console
+        """
         self.__session: requests.Session = session
         self.__total_links: int = total_links
         self.__links: List[str] = links
@@ -186,7 +205,7 @@ def start_threads(links: List[str], maps: Dict[str, str], session: requests.Sess
             sessions_queue.put(sess)
 
     with ThreadPoolExecutor(max_workers=THREAD_WORKERS) as executor:
-        for i, link in enumerate(links):
+        for link in links:
             temp_path = os.path.join(file_path_prefix, maps[link])
             sent_links[link] = temp_path
 

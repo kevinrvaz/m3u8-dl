@@ -1,11 +1,12 @@
 from urllib.parse import urlparse, urljoin
 from typing import List, Dict
-import requests
 import os
+import requests
 
 
-def fetch_playlist_links(session: requests.Session, playlist_url: str, keep: bool = False) -> List[str]:
-    """ Fetches the m3u8 playlist from the playlist_url
+def fetch_playlist_links(session: requests.Session, playlist_url: str
+                         , keep: bool = False) -> List[str]:
+    """Fetch the m3u8 playlist from the playlist_url.
 
     Parameters
     ----------
@@ -19,7 +20,6 @@ def fetch_playlist_links(session: requests.Session, playlist_url: str, keep: boo
     List[str]
         A list with all the urls where the .ts files are hosted
     """
-
     res: requests.Response = session.get(playlist_url, timeout=60)
 
     with open("links.txt", "wb") as file:
@@ -45,7 +45,7 @@ def fetch_playlist_links(session: requests.Session, playlist_url: str, keep: boo
 
 
 def construct_file_name_links_map(links: List[str]) -> Dict[str, str]:
-    """ Construct a dictionary with link to file name mappings
+    """Construct a dictionary with link to file name mappings.
 
     Parameters
     ----------
@@ -57,7 +57,6 @@ def construct_file_name_links_map(links: List[str]) -> Dict[str, str]:
     Dict[str, str]
         A dictionary containing link as key and the corresponding file name as value
     """
-
     link_file_map = {}
 
     for file_name, link in enumerate(links):

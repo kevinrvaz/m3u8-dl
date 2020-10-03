@@ -1,6 +1,6 @@
 from multiprocessing import current_process
 from traceback import print_exc
-from random import randint
+from random import SystemRandom
 from time import sleep
 
 from .videolib.convertor import convert_video, concat_all_ts, get_ts_start_time
@@ -26,7 +26,8 @@ def get_task(total_links, file_meta_data, stop=False, debug=False):
                     print(f"begin processing {data}")
                 if data:
                     break
-                sleep(randint(1, 10))
+                timer = SystemRandom()
+                sleep(timer.randrange(1, 10))
 
             if data.isnumeric():
                 if debug:
@@ -55,7 +56,7 @@ def start_process(total_links, file_name, convert, debug):
     with open("ts_list.txt", "w") as file:
         for file_path in sorted(list(file_meta_data.keys()), key=lambda k: file_meta_data[k]):
             file.write(f"file '{file_path}'\n")
-    
+
     if platform.system() == "Windows":
         client = Client(IP, PORT)
     else:

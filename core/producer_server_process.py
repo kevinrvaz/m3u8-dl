@@ -13,7 +13,8 @@ import sys
 
 
 def send_data(client: socket.socket, data: str) -> None:
-    """ A function used to abstract the sending of data to the client
+    """
+    Abstract the sending of data to the client.
 
     Parameters
     ----------
@@ -23,13 +24,13 @@ def send_data(client: socket.socket, data: str) -> None:
     data : str
         The data to send to the client socket
     """
-
     client.send(bytes(data, "utf-8"))
     client.close()
 
 
 def receive_data(client: socket.socket, d_type: str = "str", debug: bool = False) -> Any:
-    """ A function used to abstract receiving data from client
+    """
+    Abstract receiving data from client.
 
     Parameters
     ----------
@@ -68,8 +69,10 @@ def receive_data(client: socket.socket, d_type: str = "str", debug: bool = False
 
 class ProducerServerProcess:
     """
+    Producer Server Process.
+
     A class that models a server that acts as a way of passing messages between download_process and
-    video_handling process
+    video_handling process.
 
     Attributes
     ----------
@@ -96,6 +99,8 @@ class ProducerServerProcess:
 
     def __init__(self, ip: str, port: int):
         """
+        Initialize object of ProducerServerProcess to ip and port parameters.
+
         Parameters
         ----------
         ip : str
@@ -104,7 +109,6 @@ class ProducerServerProcess:
         port : int
             The port to bind the server with.
         """
-
         self.__server: Server = Server(ip, port)
         self.__queue: Queue = Queue()
         self.__update_links: int = 0
@@ -113,7 +117,7 @@ class ProducerServerProcess:
         self.__sent: int = 0
 
     def start(self, debug: bool) -> None:
-        """A function used to start the server"""
+        """Start the server."""
         soc = self.__server.socket
         while not self.__stop:
             try:
@@ -131,6 +135,8 @@ class ProducerServerProcess:
 
     def process_action(self, action: str, client: socket.socket) -> None:
         """
+        Perform actions depending on the flow of file.
+
         Parameters
         ----------
         action : str
@@ -139,7 +145,6 @@ class ProducerServerProcess:
         client : socket.socket
             The socket connected with the client
         """
-
         # The POST_FILENAME_QUEUE action is used to add a file_name to the work queue, from the
         # download_process
         if action == "POST_FILENAME_QUEUE":
@@ -170,7 +175,7 @@ class ProducerServerProcess:
 # video_handling process supported actions: - POST_FILENAME_QUEUE, GET_FILENAME_QUEUE, POST_CONVERT_VIDEO,
 # GET_CONVERT_VIDEO, POST_CONCAT_TS, GET_CONCAT_TS, STOP
 def producer_server_process(debug=False):
-    """A function that starts the ProducerServerProcess"""
+    """Start the ProducerServerProcess."""
     print(f"Started Producer Process {current_process().name}")
 
     if platform.system() == "Windows":
