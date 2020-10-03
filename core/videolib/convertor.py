@@ -3,7 +3,8 @@ import os
 
 
 def concat_all_ts(video_file: str) -> None:
-    """Concat all ts chucks one by one.
+    """
+    Concat all ts chucks one by one.
 
     Parameters
     ----------
@@ -16,7 +17,8 @@ def concat_all_ts(video_file: str) -> None:
 
 
 def convert_video(video_input: str, video_output: str) -> None:
-    """Convert video from ts to mp4.
+    """
+    Convert video from ts to mp4.
 
     Parameters
     ----------
@@ -33,7 +35,8 @@ def convert_video(video_input: str, video_output: str) -> None:
 
 
 def get_ts_start_time(file_path: str) -> float:
-    """Search For ts file start time.
+    """
+    Search For ts file start time.
 
     Parameters
     ----------
@@ -50,7 +53,8 @@ def get_ts_start_time(file_path: str) -> float:
 
 
 def parse_png_to_mpeg2ts_stream(file_path: str) -> None:
-    """Strip the mpeg2-ts data from a file.
+    """
+    Strip the mpeg2-ts data from a file.
 
     Parameters
     ----------

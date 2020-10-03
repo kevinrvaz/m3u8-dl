@@ -23,7 +23,8 @@ class BaseSocketServer:
     """
 
     def __init__(self, soc: socket.socket):
-        """Initialize BaseSocketServer Object to soc.
+        """
+        Initialize BaseSocketServer Object to soc.
 
         Parameters
         ----------
@@ -33,7 +34,8 @@ class BaseSocketServer:
         self.socket = soc
 
     def send_data(self, data: Any, d_type: str = "str") -> None:
-        """Send data to the connected socket.
+        """
+        Send data to the connected socket.
 
         Parameters
         ----------
@@ -49,7 +51,8 @@ class BaseSocketServer:
             self.socket.send(bytes(data, "utf-8"))
 
     def receive_data(self, size: int = 4096, data_type: str = str) -> Optional[Any]:
-        """Receive data to the connected socket.
+        """
+        Receive data to the connected socket.
 
         Parameters
         ----------
@@ -81,7 +84,8 @@ class Server(BaseSocketServer):
     """
 
     def __init__(self, ip, port):
-        """Initialize Server Object with ip and port parameters.
+        """
+        Initialize Server Object with ip and port parameters.
 
         Parameters
         ----------
@@ -106,7 +110,8 @@ class Client(BaseSocketServer):
     """
 
     def __init__(self, ip, port):
-        """Initialize Client Object with ip and port parameters.
+        """
+        Initialize Client Object with ip and port parameters.
 
         Parameters
         ----------

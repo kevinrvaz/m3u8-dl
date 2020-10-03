@@ -7,7 +7,8 @@ import requests
 
 def fetch_data(download_url: str, session: requests.Session,
                timeout: int, file_path: str, http2: bool) -> Optional[str]:
-    """Fetch Data from Url.
+    """
+    Fetch Data from Url.
 
     Parameters
     ----------

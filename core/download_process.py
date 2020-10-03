@@ -45,7 +45,8 @@ class DownloadProcess:
     def __init__(self, links: List[str], total_links: int, session: requests.Session,
                  http2: bool = False, max_retries: int = 5,
                  convert: bool = True, debug: bool = False):
-        """Initialize Object of DownloadProcess.
+        """
+        Initialize Object of DownloadProcess.
 
         Parameters
         ----------
