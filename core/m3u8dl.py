@@ -1,6 +1,6 @@
 from requests.adapters import HTTPAdapter
 from hyper.contrib import HTTP20Adapter
-from multiprocessing import Process
+from multiprocessing import Process, Manager
 from traceback import print_exc
 from shutil import rmtree
 
@@ -9,6 +9,7 @@ from .producer_server_process import producer_server_process
 from .video_handling_process import video_handling
 from .download_process import download_process
 from .weblib.parse import construct_headers
+from .progressbar import update_progress_bar
 
 import platform
 import requests
@@ -96,8 +97,16 @@ def main():
                         name="video_handling_process")
         video.start()
 
+        queue = Manager().Queue()
+
+        progress_bar_process = Process(target=update_progress_bar, args=(queue, len(links)),
+                                       name="progress_bar_process_going_on")
+
+        progress_bar_process.daemon = True
+        progress_bar_process.start()
+
         download_process(links, len(links), sess, http2, MAX_RETRIES, cli_args.convert,
-                         file_link_maps, path_prefix, debug)
+                         file_link_maps, path_prefix, debug, queue)
 
         server.join()
         video.join()
