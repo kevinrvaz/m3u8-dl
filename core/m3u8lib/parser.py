@@ -1,8 +1,8 @@
-import os
-from urllib.parse import urlparse, urljoin
-from typing import List, Dict
-import requests
 import pathlib
+from typing import List, Dict
+from urllib.parse import urlparse, urljoin
+
+import requests
 
 
 def fetch_playlist_links(session: requests.Session, playlist_url: str,
