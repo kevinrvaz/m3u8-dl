@@ -4,7 +4,6 @@ from typing import Optional
 import write_file_no_gil
 import requests
 
-
 def fetch_data(download_url: str, session: requests.Session,
                timeout: int, file_path: str, http2: bool) -> Optional[str]:
     """
@@ -51,8 +50,6 @@ def fetch_data(download_url: str, session: requests.Session,
     except (ConnectionResetError, ConnectionRefusedError, ConnectionError,
             TimeoutError, ConnectionAbortedError, OSError):
         return download_url
-
-    return None
 
 
 def redirect_handler(session: requests.Session, request_body: requests.Response, retry: int = 5) -> requests.Response:
