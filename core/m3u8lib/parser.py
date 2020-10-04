@@ -1,6 +1,6 @@
+import os
 from urllib.parse import urlparse, urljoin
 from typing import List, Dict
-import os
 import requests
 import pathlib
 
@@ -41,7 +41,8 @@ def fetch_playlist_links(session: requests.Session, playlist_url: str,
                             for link in temp if "EXT" not in link]
         if keep:
             with open(filename, "w") as file:
-                file.writelines(links)
+                for link in links:
+                    file.write(f"{link}\n")
 
     return links
 
