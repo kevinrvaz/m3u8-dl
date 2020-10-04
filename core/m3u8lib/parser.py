@@ -28,7 +28,7 @@ def fetch_playlist_links(session: requests.Session, playlist_url: str,
     if p.is_file():
         with open(filename) as file:
             temp = file.readlines()
-        links: List[str] = [link.strip() for link in temp]
+        links: List[str] = [link.strip() for link in temp if not link.startswith("#")]
     else:
         res: requests.Response = session.get(playlist_url, timeout=60)
         temp = [link.strip() for link in res.text.splitlines()]
@@ -38,7 +38,7 @@ def fetch_playlist_links(session: requests.Session, playlist_url: str,
         # If the link in the m3u8 playlist is already a full link we add that to the result `links list`
         # else we join the base_url with the link partial in the playlist and add that to the `links list`
         links: List[str] = [(link if parsed_url.scheme in link else urljoin(base_url, link))
-                            for link in temp if "EXT" not in link]
+                            for link in temp if not link.startswith("#")]
         if keep:
             with open(filename, "w") as file:
                 for link in links:
