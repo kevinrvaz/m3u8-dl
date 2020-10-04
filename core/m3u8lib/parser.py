@@ -26,7 +26,7 @@ def fetch_playlist_links(session: requests.Session, playlist_url: str,
     filename = "links.txt"
     p = pathlib.Path(playlist_url)
     if p.is_file():
-        with open(filename) as file:
+        with open(playlist_url) as file:
             temp = file.readlines()
         links: List[str] = [link.strip() for link in temp if not link.startswith("#")]
     else:
