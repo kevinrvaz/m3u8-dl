@@ -37,7 +37,8 @@ def download_process(links, total_links, session, http2, max_retries,
     except (KeyboardInterrupt, Exception):
         print_exc()
 
-    print(f"\nDownload took {time() - start_time} seconds")
+    minutes, seconds = divmod(time() - start_time, 60)
+    print(f"\nDownload took {minutes} minutes and {seconds} seconds")
     print(f"Stopped Download process {current_process().name}")
 
 
@@ -174,7 +175,7 @@ def process_pool_executor_handler(executor: ProcessPoolExecutor, manager: Downlo
             manager.set_thread_num(int(ceil((manager.get_total_links()
                                              - manager.get_total_downloaded_links_count())
                                             / manager.get_process_num())))
-            print(f"{manager.get_total_links()} was expected but "
+            print(f"\n{manager.get_total_links()} was expected but "
                   f"{manager.get_total_downloaded_links_count()} was downloaded.")
             manager.done_retries += 1
             print(f"Trying retry {manager.done_retries}")

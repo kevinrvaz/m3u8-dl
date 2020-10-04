@@ -28,6 +28,11 @@ def construct_headers(header_path: str) -> Tuple[Dict[str, str], bool]:
     if os.path.exists(header_path):
         with open(header_path) as file:
             lines = file.readlines()
+            if not lines:
+                lines.append("Access-Control-Allow-Origin: *")
+                lines.append("User-Agent: Mozilla/5.0 (X11; Linux x86_64) "
+                             "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36")
+
             lines = [line.strip() for line in lines]
 
         for line in lines:
@@ -57,7 +62,8 @@ def construct_headers(header_path: str) -> Tuple[Dict[str, str], bool]:
             print("headers incorrectly parsed check construct_headers() function for debugging")
             sys.exit()
     else:
-        print(f"Include headers in {header_path} directory and restart program")
-        sys.exit()
+        header["Access-Control-Allow-Origin"] = "*"
+        header["User-Agent"] = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 " \
+                               "(KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36"
 
     return header, http2
