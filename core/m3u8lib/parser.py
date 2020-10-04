@@ -39,10 +39,10 @@ def fetch_playlist_links(session: requests.Session, playlist_url: str,
         # else we join the base_url with the link partial in the playlist and add that to the `links list`
         links: List[str] = [(link if parsed_url.scheme in link else urljoin(base_url, link))
                             for link in temp if not link.startswith("#")]
-        if keep:
-            with open(filename, "w") as file:
-                for link in links:
-                    file.write(f"{link}\n")
+    if keep:
+        with open(filename, "w") as file:
+            for link in links:
+                file.write(f"{link}\n")
 
     return links
 
