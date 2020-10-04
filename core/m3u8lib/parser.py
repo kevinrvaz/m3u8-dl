@@ -1,11 +1,12 @@
-from urllib.parse import urlparse, urljoin
+import pathlib
 from typing import List, Dict
-import os
+from urllib.parse import urlparse, urljoin
+
 import requests
 
 
-def fetch_playlist_links(session: requests.Session, playlist_url: str
-                         , keep: bool = False) -> List[str]:
+def fetch_playlist_links(session: requests.Session, playlist_url: str,
+                         keep: bool = False) -> List[str]:
     """Fetch the m3u8 playlist from the playlist_url.
 
     Parameters
@@ -14,32 +15,34 @@ def fetch_playlist_links(session: requests.Session, playlist_url: str
         The session via which the request will be made
     playlist_url : str
         The url where the m3u8 playlist is hosted
+    keep : bool
+        Keep file with links on disk.
 
     Returns
     -------
     List[str]
         A list with all the urls where the .ts files are hosted
     """
-    res: requests.Response = session.get(playlist_url, timeout=60)
-
-    with open("links.txt", "wb") as file:
-        file.write(res.content)
-
-    with open("links.txt") as file:
-        temp = file.readlines()
-        temp = [link.strip() for link in temp]
-
-    if not keep:
-        os.unlink("links.txt")
-
-    parsed_url = urlparse(playlist_url)
-    base_url: str = f"{parsed_url.scheme}://{parsed_url.netloc}{'/'.join(parsed_url.path.split('/')[:-1])}/"
-
-    # Construct a links list containing the links joined with the base_url.
-    # If the link in the m3u8 playlist is already a full link we add that to the result `links list`
-    # else we join the base_url with the link partial in the playlist and add that to the `links list`
-    links: List[str] = [(link if "https" in link else urljoin(base_url, link))
-                        for link in temp if "EXT" not in link]
+    filename = "links.txt"
+    p = pathlib.Path(playlist_url)
+    if p.is_file():
+        with open(playlist_url) as file:
+            temp = file.readlines()
+        links: List[str] = [link.strip() for link in temp if not link.startswith("#")]
+    else:
+        res: requests.Response = session.get(playlist_url, timeout=60)
+        temp = [link.strip() for link in res.text.splitlines()]
+        parsed_url = urlparse(playlist_url)
+        base_url: str = f"{parsed_url.scheme}://{parsed_url.netloc}{'/'.join(parsed_url.path.split('/')[:-1])}/"
+        # Construct a links list containing the links joined with the base_url.
+        # If the link in the m3u8 playlist is already a full link we add that to the result `links list`
+        # else we join the base_url with the link partial in the playlist and add that to the `links list`
+        links: List[str] = [(link if parsed_url.scheme in link else urljoin(base_url, link))
+                            for link in temp if not link.startswith("#")]
+    if keep:
+        with open(filename, "w") as file:
+            for link in links:
+                file.write(f"{link}\n")
 
     return links
 
