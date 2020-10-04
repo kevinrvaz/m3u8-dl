@@ -6,7 +6,7 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/5b9b59ec733049be8c72c402b54af111)](https://www.codacy.com/manual/excalibur.krv/m3u8-dl?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=excalibur-kvrv/m3u8-dl&amp;utm_campaign=Badge_Grade)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/excalibur-kvrv/m3u8-dl/graphs/commit-activity)
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
-
+[![PyPI version](https://badge.fury.io/py/m3u8dl.svg)](https://badge.fury.io/py/m3u8dl)
 
 a CLI program to download videos in a m3u8 playlist, write it to a single video file and convert it to mp4 using ffmpeg. Read about m3u8 here https://en.wikipedia.org/wiki/M3U#M3U8
 
@@ -26,6 +26,14 @@ a CLI program to download videos in a m3u8 playlist, write it to a single video 
 - start the script using `python -m m3u8dl <url of playlist>`.
 
 ## Installing/Uninstalling
+for installation and usage using pip:-
+- visit PyPI https://pypi.org/project/m3u8dl/0.1.1/ or install using below commands.
+- run `pip install m3u8dl==0.1.1`
+- run the program now using `python -m m3u8dl <url-of-playlist>`
+
+for uninstalling using pip:-
+- run `pip uninstall m3u8dl`
+
 for installation in ubuntu using PyInstaller:-
 - activate virtualenv using `source venv/bin/activate`
 - run `pyinstaller main.py --name m3u8-dl --onefile -p venv/lib/python3.6/site-packages/

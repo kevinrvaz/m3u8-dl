@@ -1,10 +1,20 @@
-from setuptools import setup, find_packages
-from Cython.Build import cythonize
+from setuptools import setup, find_packages, Extension
 import os
 
-path = os.path.join("m3u8dl", "core", "utils", "write_file_no_gil.pyx")
+USE_CYTHON = False
+
+ext = '.pyx' if USE_CYTHON else '.c'
+
+path = os.path.join("m3u8dl", "core", "utils", "write_file_no_gil")
+extensions = [Extension("write_file_no_gil", [path + ext])]
+
+if USE_CYTHON:
+    from Cython.Build import cythonize
+    extensions = cythonize(extensions)
+
+
 DESCRIPTION = 'm3u8 playlist downloader'
-VERSION = "0.2.0"
+VERSION = "0.1.1"
 
 
 with open("README.md") as fh:
@@ -13,7 +23,7 @@ with open("README.md") as fh:
 setup(
     name="m3u8dl",
     version=VERSION,
-    ext_modules=cythonize(path),
+    ext_modules=extensions,
     zip_safe=False,
     author="Kevin Rohan Vaz",
     author_email="excalibur.krv@gmail.com",
@@ -27,10 +37,9 @@ setup(
     install_requires=[
         "hyper==0.7.0",
         "PyInstaller==3.6",
-        "requests==2.24.0"
+        "requests==2.24.0",
         "Cython~=0.29.21",
-        "progress~=1.5",
-        "setuptools~=49.6.0"
+        "progress~=1.5"
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
