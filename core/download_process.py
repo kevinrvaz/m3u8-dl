@@ -20,14 +20,14 @@ import os
 
 
 def download_process(links, total_links, session, http2, max_retries,
-                     convert, file_link_maps, path_prefix, debug) -> None:
+                     convert, file_link_maps, path_prefix, debug, progress_bar_queue) -> None:
     print(f"Starting Download process {current_process().name}")
     start_time = time()
     try:
         download_manager = DownloadProcess(links, total_links, session, http2,
                                            max_retries, convert, debug)
 
-        start_processes(download_manager, file_link_maps, path_prefix)
+        start_processes(download_manager, file_link_maps, path_prefix, progress_bar_queue)
         try:
             client = Client(IP, PORT)
             client.send_data(f"{'STOP_QUEUE':<{HEADER_SIZE}}{download_manager.get_total_downloaded_links_count()}")
@@ -37,7 +37,7 @@ def download_process(links, total_links, session, http2, max_retries,
     except (KeyboardInterrupt, Exception):
         print_exc()
 
-    print(f"Download took {time() - start_time} seconds")
+    print(f"\nDownload took {time() - start_time} seconds")
     print(f"Stopped Download process {current_process().name}")
 
 
@@ -45,6 +45,25 @@ class DownloadProcess:
     def __init__(self, links: List[str], total_links: int, session: requests.Session,
                  http2: bool = False, max_retries: int = 5,
                  convert: bool = True, debug: bool = False):
+        """Initialize Object of DownloadProcess.
+
+        Parameters
+        ----------
+        links: List[str]
+            The links to be downloaded
+        total_links: int
+            The number of links to be downloaded
+        session: requests.Session
+            The session using which all the links will be downloaded
+        http2: bool
+            A flag to keep track of the type of http headers
+        max_retries: int
+            The maximum number of retries for a particular link
+        convert: bool
+            A flag to keep track of the whether the downloaded video should be converted
+        debug: bool
+            A flag to print messages to the console
+        """
         self.__session: requests.Session = session
         self.__total_links: int = total_links
         self.__links: List[str] = links
@@ -53,7 +72,7 @@ class DownloadProcess:
         self.convert = convert
         self.__sent = 0
         self.__process_num = len(os.sched_getaffinity(os.getpid())) if platform.system() == "Linux" else 4
-        self.__thread_num = int(ceil((total_links - self.__sent) / self.__process_num))
+        self.__thread_num = int(ceil((total_links - self.__sent) / (self.__process_num * 4)))
         self.debug = debug
         self.done_retries = 0
         self.error_links = []
@@ -83,20 +102,22 @@ class DownloadProcess:
         self.__sent = val
 
 
-def start_processes(download_manager: DownloadProcess, file_link_maps: Dict[str, str], path_prefix: str) -> None:
+def start_processes(download_manager: DownloadProcess, file_link_maps: Dict[str, str], path_prefix: str
+                    , progress_bar_queue) -> None:
     process_num: int = download_manager.get_process_num()
     if download_manager.debug:
         print(f"starting {process_num} processes for {len(download_manager.get_download_links())} links")
 
     with ProcessPoolExecutor(max_workers=process_num) as process_pool_executor:
         try:
-            process_pool_executor_handler(process_pool_executor, download_manager, file_link_maps, path_prefix)
+            process_pool_executor_handler(process_pool_executor, download_manager, file_link_maps, path_prefix
+                                          , progress_bar_queue)
         except (KeyboardInterrupt, Exception):
             sys.exit()
 
 
 def process_pool_executor_handler(executor: ProcessPoolExecutor, manager: DownloadProcess,
-                                  file_maps: Dict[str, str], directory: str) -> None:
+                                  file_maps: Dict[str, str], directory: str, progress_bar_queue) -> None:
     done_queue = JoinableQueue()
 
     def update_hook(future: Future):
@@ -130,7 +151,7 @@ def process_pool_executor_handler(executor: ProcessPoolExecutor, manager: Downlo
             cpu_num = available_cpus[temp_num % len(available_cpus)]
             process_futures.append(executor.submit(start_threads, download_links[start:end],
                                                    file_maps, manager.get_session(), directory,
-                                                   manager.http2, manager.debug, cpu_num))
+                                                   manager.http2, progress_bar_queue, manager.debug, cpu_num))
             process_futures[-1].add_done_callback(update_hook)
             start = end
 
@@ -162,7 +183,7 @@ def process_pool_executor_handler(executor: ProcessPoolExecutor, manager: Downlo
 
 
 def start_threads(links: List[str], maps: Dict[str, str], session: requests.Session,
-                  file_path_prefix: str, http2: bool, debug: bool = False,
+                  file_path_prefix: str, http2: bool, progress_bar_queue, debug: bool = False,
                   cpu_num: int = 0) -> List[Optional[str]]:
     failed_links = Queue()
     sessions_queue = Queue()
@@ -186,7 +207,7 @@ def start_threads(links: List[str], maps: Dict[str, str], session: requests.Sess
             sessions_queue.put(sess)
 
     with ThreadPoolExecutor(max_workers=THREAD_WORKERS) as executor:
-        for i, link in enumerate(links):
+        for link in links:
             temp_path = os.path.join(file_path_prefix, maps[link])
             sent_links[link] = temp_path
 
@@ -214,6 +235,7 @@ def start_threads(links: List[str], maps: Dict[str, str], session: requests.Sess
     if debug:
         print(f"Sending data to server of size {len(send_data)} bytes")
 
+    progress_bar_queue.put(len(sent_links))
     return failed
 
 

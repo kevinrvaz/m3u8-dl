@@ -7,6 +7,8 @@ import requests
 def fetch_data(download_url: str, session: requests.Session,
                timeout: int, file_path: str, http2: bool) -> Optional[str]:
     """
+    Fetch Data from Url.
+
     Parameters
     ----------
     download_url : str
@@ -29,7 +31,6 @@ def fetch_data(download_url: str, session: requests.Session,
     Optional[str]
         Returns a string containing the download link that failed
     """
-
     try:
         if http2:
             if ":path" in session.headers:
@@ -49,8 +50,7 @@ def fetch_data(download_url: str, session: requests.Session,
     except (ConnectionResetError, ConnectionRefusedError, ConnectionError,
             TimeoutError, ConnectionAbortedError, OSError):
         return download_url
-
-    return None
+return None
 
 
 def redirect_handler(session: requests.Session, request_body: bytes, retry: int = 5) -> bytes:
