@@ -7,7 +7,7 @@ cdef extern from "stdio.h" nogil:
 
 cdef void write_no_gil(char* f_name, char* data, int size) nogil:
     cdef FILE* c_file
-    c_file = fopen(f_name, "wb")
+    c_file = fopen(f_name, "ab")
 
     fwrite(data, sizeof(data[0]), size, c_file)
     fclose(c_file)

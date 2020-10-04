@@ -38,27 +38,25 @@ def fetch_data(download_url: str, session: requests.Session,
                 parsed_suffix = urlparse(download_url).path
                 session.headers[":path"] = parsed_suffix
 
-        request_data = session.get(download_url, timeout=timeout)
+        with session.get(download_url, timeout=timeout, stream=True) as request_data:
+            request_data.raise_for_status()
+            if request_data.status_code == 302:
+                request_data = redirect_handler(session, request_data)
 
-        if request_data.status_code == 302:
-            request_data = redirect_handler(session, request_data.content)
+            for chunk in request_data.iter_content(10485760):
+                if not chunk:
+                    break
+                write_file_no_gil.write_file(file_path, chunk)
 
     except (ConnectionResetError, ConnectionRefusedError, ConnectionError,
             TimeoutError, ConnectionAbortedError, OSError):
         return download_url
 
-    if isinstance(request_data, bytes):
-        data = request_data
-    else:
-        data = request_data.content
-
-    write_file_no_gil.write_file(file_path, data)
-
     return None
 
 
-def redirect_handler(session: requests.Session, request_body: bytes, retry: int = 5) -> bytes:
-    text = request_body.decode().split(" ")
+def redirect_handler(session: requests.Session, request_body: requests.Response, retry: int = 5) -> requests.Response:
+    text = request_body.content.decode().split(" ")
     url = text[-1]
     parsed_url = urlparse(url)
 
@@ -73,7 +71,7 @@ def redirect_handler(session: requests.Session, request_body: bytes, retry: int 
     session.headers[":path"] = path
     session.headers["origin"] = "null"
 
-    request_data = session.get(url)
+    request_data = session.get(url, stream=True)
 
     session.headers[":authority"] = temp_auth
     session.headers[":path"] = temp_path
@@ -82,6 +80,6 @@ def redirect_handler(session: requests.Session, request_body: bytes, retry: int 
     if request_data.status_code == 403:
         raise ConnectionAbortedError("403")
     elif request_data.status_code == 302 and retry:
-        return redirect_handler(session, request_data.content, retry - 1)
+        return redirect_handler(session, request_data, retry - 1)
 
-    return request_data.content
+    return request_data
