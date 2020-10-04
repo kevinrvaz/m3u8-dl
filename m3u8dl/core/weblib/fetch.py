@@ -4,6 +4,7 @@ from typing import Optional
 import write_file_no_gil
 import requests
 
+
 def fetch_data(download_url: str, session: requests.Session,
                timeout: int, file_path: str, http2: bool) -> Optional[str]:
     """
