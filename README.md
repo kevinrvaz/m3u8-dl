@@ -20,7 +20,8 @@ a CLI program to download videos in a m3u8 playlist, write it to a single video 
 - clone the repository using `git clone "ssh/https url"`.
 - create a virtual environment using `virtualenv -p python3.6 venv` in linux terminal, see 'Dependencies' for platform specific instructions.
 - activate virtual environment using `source venv/bin/activate` in linux terminal, see 'Dependencies' for platform specific instructions.
-- install dependencies using `pip install -r requirements.txt`.
+- install dependencies using `pip install -r requirements.txt`. 
+- set `USE_CYTHON = True` in setup.py
 - compile shared libraries using ` python setup.py build_ext --inplace`.
 - insert the url request headers in headers.txt.
 - start the script using `python -m m3u8dl <url of playlist>`.
