@@ -42,6 +42,8 @@ def main():
     parser.add_argument("-c", "--convert", help="Convert the downloaded video to mp4 using ffmpeg", action="store_true")
     parser.add_argument("-d", "--debug", help="Print helpful messages to the terminal to "
                                               "help understanding the process flow", action="store_true")
+    parser.add_argument("-t", "--threads", type=int, help="Specify number of threads by default 4 will be "
+                                                        "initiated for each process")
 
     cli_args = parser.parse_args()
 
@@ -106,7 +108,7 @@ def main():
         progress_bar_process.start()
 
         download_process(links, len(links), sess, http2, MAX_RETRIES, cli_args.convert,
-                         file_link_maps, path_prefix, debug, queue)
+                         file_link_maps, path_prefix, debug, queue, cli_args.threads)
 
         server.join()
         video.join()
