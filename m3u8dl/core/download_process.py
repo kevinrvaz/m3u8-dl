@@ -66,6 +66,8 @@ class DownloadProcess:
             A flag to keep track of the whether the downloaded video should be converted
         debug: bool
             A flag to print messages to the console
+        processes: int
+            The number of processes to be used
         """
         self.__session: requests.Session = session
         self.__total_links: int = total_links
