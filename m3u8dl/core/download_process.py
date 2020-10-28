@@ -20,12 +20,13 @@ import os
 
 
 def download_process(links, total_links, session, http2, max_retries,
-                     convert, file_link_maps, path_prefix, debug, progress_bar_queue) -> None:
+                     convert, file_link_maps, path_prefix, debug, progress_bar_queue,
+                     processes) -> None:
     print(f"Starting Download process {current_process().name}")
     start_time = time()
     try:
         download_manager = DownloadProcess(links, total_links, session, http2,
-                                           max_retries, convert, debug)
+                                           max_retries, convert, debug, processes)
 
         start_processes(download_manager, file_link_maps, path_prefix, progress_bar_queue)
         try:
@@ -45,7 +46,8 @@ def download_process(links, total_links, session, http2, max_retries,
 class DownloadProcess:
     def __init__(self, links: List[str], total_links: int, session: requests.Session,
                  http2: bool = False, max_retries: int = 5,
-                 convert: bool = True, debug: bool = False):
+                 convert: bool = True, debug: bool = False,
+                 processes: int = 0):
         """Initialize Object of DownloadProcess.
 
         Parameters
@@ -64,6 +66,8 @@ class DownloadProcess:
             A flag to keep track of the whether the downloaded video should be converted
         debug: bool
             A flag to print messages to the console
+        processes: int
+            The number of processes to be used
         """
         self.__session: requests.Session = session
         self.__total_links: int = total_links
@@ -72,7 +76,7 @@ class DownloadProcess:
         self.http2: bool = http2
         self.convert = convert
         self.__sent = 0
-        self.__process_num = len(os.sched_getaffinity(os.getpid())) if platform.system() == "Linux" else 4
+        self.__process_num = processes or len(os.sched_getaffinity(os.getpid())) if platform.system() == "Linux" else 4
         self.__thread_num = int(ceil((total_links - self.__sent) / (self.__process_num * 4)))
         self.debug = debug
         self.done_retries = 0
