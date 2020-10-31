@@ -28,6 +28,7 @@ a CLI program to download videos in a m3u8 playlist, write it to a single video 
 
 ## Installing/Uninstalling
 for installation and usage using pip:-
+- ensure ffmpeg is installed see dependecies section
 - visit PyPI https://pypi.org/project/m3u8dl/0.1.1/ or install using below commands.
 - run `pip install m3u8dl==0.1.1`
 - run the program now using `python -m m3u8dl <url-of-playlist>`
