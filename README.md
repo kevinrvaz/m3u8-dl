@@ -52,3 +52,5 @@ for uninstalling in ubuntu:-
     --header-path, -p:- specify the path of header file`
     --retry, -r:- specify number of retries, by default 5 retries will be initiated
     --debug, -d:- print helpful messages to console to understand program flow
+    --processes, -m:- specify custom number of processes, default is 4
+    --threads, -t:- specify custom number of threads, default is 4 per process
