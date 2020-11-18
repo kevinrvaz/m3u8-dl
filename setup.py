@@ -36,7 +36,7 @@ setup(
     packages=find_packages(),
     install_requires=[
         "hyper==0.7.0",
-        "PyInstaller==3.6",
+        "PyInstaller==4.1",
         "requests==2.24.0",
         "Cython~=0.29.21",
         "progress~=1.5"
