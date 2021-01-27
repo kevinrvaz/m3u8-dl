@@ -6,6 +6,7 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/5b9b59ec733049be8c72c402b54af111)](https://www.codacy.com/manual/excalibur.krv/m3u8-dl?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=excalibur-kvrv/m3u8-dl&amp;utm_campaign=Badge_Grade)
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
 [![PyPI version](https://badge.fury.io/py/m3u8dl.svg)](https://badge.fury.io/py/m3u8dl)
+[![Downloads](https://pepy.tech/badge/m3u8dl)](https://pepy.tech/project/m3u8dl)
 
 a CLI program to download videos in a m3u8 playlist, write it to a single video file and convert it to mp4 using ffmpeg. Read about m3u8 here https://en.wikipedia.org/wiki/M3U#M3U8
 
