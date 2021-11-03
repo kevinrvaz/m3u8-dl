@@ -17,6 +17,8 @@ a CLI program to download videos in a m3u8 playlist, write it to a single video 
 - Visit https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/#creating-a-virtual-environment for instructions on how to use virtualenv. 
 
 ## Usage
+
+### Setup without docker
 - clone the repository using `git clone "ssh/https url"`.
 - create a virtual environment using `virtualenv -p python3.6 venv` in linux terminal, see 'Dependencies' for platform specific instructions.
 - activate virtual environment using `source venv/bin/activate` in linux terminal, see 'Dependencies' for platform specific instructions.
@@ -25,6 +27,11 @@ a CLI program to download videos in a m3u8 playlist, write it to a single video 
 - compile shared libraries using ` python setup.py build_ext --inplace`.
 - insert the url request headers in headers.txt.
 - start the script using `python -m m3u8dl <url of playlist>`.
+
+### Setup with docker
+- build docker image using `docker build -t m3u8dl:0.11 .`
+- start container `docker run -d -it --entrypoint='bash' --name m3u8dl-app m3u8dl:0.11` 
+- go into container terminal `docker exec -it m3u8dl-app bash`
 
 ## Installing/Uninstalling
 for installation and usage using pip:-

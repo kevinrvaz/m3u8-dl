@@ -1,7 +1,6 @@
 from urllib.parse import urlparse
 from typing import Optional
 
-import write_file_no_gil
 import requests
 
 
@@ -43,10 +42,15 @@ def fetch_data(download_url: str, session: requests.Session,
             if request_data.status_code == 302:
                 request_data = redirect_handler(session, request_data)
 
+            file = open(file_path, "ab")
+
             for chunk in request_data.iter_content(10485760):
                 if not chunk:
                     break
-                write_file_no_gil.write_file(file_path, chunk)
+
+                file.write(chunk)
+            
+            file.close()
 
     except (ConnectionResetError, ConnectionRefusedError, ConnectionError,
             TimeoutError, ConnectionAbortedError, OSError):
