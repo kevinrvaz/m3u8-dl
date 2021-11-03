@@ -31,4 +31,8 @@ setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',
+    entry_points = '''
+        [console_scripts]
+        m3u8-dl=m3u8dl:main
+    '''
 )
