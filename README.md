@@ -35,7 +35,7 @@ A CLI program to download a video played using a m3u8 playlist. Read about m3u8 
 - pull from docker hub using `docker pull excaliburkrv/m3u8-dl`
 - if not pulled from docker hub you can pull from github packages using `docker pull ghcr.io/excalibur-kvrv/m3u8-dl:master`
 - then start the container in detached mode using `docker run -d -it --name m3u8dl-app excaliburkrv/m3u8-dl` if pulled from docker hub
-- attach to container via terminal `docker exec -it m3u8dl-app bash`
+- attach to container via terminal `docker exec -it m3u8dl-app sh`
 - start the script using `python3 -m m3u8dl <url of playlist>`.
 
 ## Installing/Uninstalling Globally
