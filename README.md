@@ -25,16 +25,25 @@ A CLI program to download a video played using a m3u8 playlist. Read about m3u8 
 - start the script using `python -m m3u8dl <url of playlist>`.
 
 ### Setup with Docker
-- build docker image using `docker build -t m3u8dl:0.5.0 .`
-- start container `docker run -d -it --entrypoint='bash' --name m3u8dl-app m3u8dl:0.5.0` 
-- go into container terminal `docker exec -it m3u8dl-app bash`
+#### Re-build docker image
+- build docker image using `docker build -t m3u8dl:0.5.1 .`
+- start container `docker run -d -it --name m3u8dl-app m3u8dl:0.5.1` 
+- attach to container via terminal `docker exec -it m3u8dl-app bash`
+- start the script using `python3 -m m3u8dl <url of playlist>`.
 
-## Installing/Uninstalling
+#### Pull exisiting docker image from github packages or docker hub
+- pull from docker hub using `docker pull excaliburkrv/m3u8-dl`
+- if not pulled from docker hub you can pull from github packages using `docker pull ghcr.io/excalibur-kvrv/m3u8-dl:master`
+- then start the container in detached mode using `docker run -d -it --name m3u8dl-app excaliburkrv/m3u8-dl` if pulled from docker hub
+- attach to container via terminal `docker exec -it m3u8dl-app bash`
+- start the script using `python3 -m m3u8dl <url of playlist>`.
+
+## Installing/Uninstalling Globally
 ### Installation and usage using pip:-
 - ensure ffmpeg is installed see dependecies section
 - visit PyPI https://pypi.org/project/m3u8dl/0.5.0/ or install using below commands.
-- run `pip install m3u8dl==0.5.0`
-- run the program now using `python -m m3u8dl <url-of-playlist>`
+- run `pip install m3u8dl==0.5.1`
+- run the program now using `m3u8-dl <url-of-playlist>`
 
 ### Uninstalling using pip:-
 - run `pip uninstall m3u8dl`
