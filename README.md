@@ -3,9 +3,11 @@
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/built-with-swag.svg)](https://forthebadge.com)
 [![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/) <br>
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/5b9b59ec733049be8c72c402b54af111)](https://www.codacy.com/manual/excalibur.krv/m3u8-dl?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=excalibur-kvrv/m3u8-dl&amp;utm_campaign=Badge_Grade)
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
 [![PyPI version](https://badge.fury.io/py/m3u8dl.svg)](https://badge.fury.io/py/m3u8dl)
+[![Docker](https://github.com/excalibur-kvrv/m3u8-dl/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/excalibur-kvrv/m3u8-dl/actions/workflows/docker-publish.yml)
+[![CodeQL](https://github.com/excalibur-kvrv/m3u8-dl/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/excalibur-kvrv/m3u8-dl/actions/workflows/codeql-analysis.yml)
+[![Upload Python Package](https://github.com/excalibur-kvrv/m3u8-dl/actions/workflows/python-publish.yml/badge.svg)](https://github.com/excalibur-kvrv/m3u8-dl/actions/workflows/python-publish.yml)
 [![Downloads](https://pepy.tech/badge/m3u8dl)](https://pepy.tech/project/m3u8dl)
 
 a CLI program to download videos in a m3u8 playlist, write it to a single video file and convert it to mp4 using ffmpeg. Read about m3u8 here https://en.wikipedia.org/wiki/M3U#M3U8
