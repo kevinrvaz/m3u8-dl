@@ -1,7 +1,7 @@
-from setuptools import setup, find_packages, Extension
+from setuptools import setup, find_packages
 
 DESCRIPTION = 'm3u8 playlist downloader'
-VERSION = "0.1.1"
+VERSION = "0.5.0"
 
 
 with open("README.md") as fh:
@@ -13,8 +13,8 @@ setup(
     zip_safe=False,
     author="Kevin Rohan Vaz",
     author_email="excalibur.krv@gmail.com",
-    maintainer='Vaibhav Lodha',
-    maintainer_email='vlodha98@gmail.com',
+    maintainer='Kevin Rohan Vaz',
+    maintainer_email='excalibur.krv@gmail.com',
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
@@ -22,9 +22,8 @@ setup(
     packages=find_packages(),
     install_requires=[
         "hyper==0.7.0",
-        "PyInstaller==3.6",
-        "requests==2.24.0",
-        "progress~=1.5"
+        "requests==2.26.0",
+        "tqdm==4.62.3"
     ],
     classifiers=[
         "Programming Language :: Python :: 3",

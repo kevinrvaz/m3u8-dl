@@ -1,11 +1,12 @@
-from progress.bar import ChargingBar
-
+from tqdm import tqdm
+from time import sleep
 
 def update_progress_bar(queue, length):
-    bar = ChargingBar('Downloading ------------>', max=length)
-    while True:
-        try:
-            data = queue.get()
-            bar.next(data)
-        except EOFError:
-            pass
+    with tqdm(total=length) as pbar:
+        while True:
+            try:
+                data = queue.get()
+                sleep(0.1)
+                pbar.update(data)
+            except EOFError:
+                pass

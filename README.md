@@ -6,7 +6,7 @@
 [![Upload Python Package](https://github.com/excalibur-kvrv/m3u8-dl/actions/workflows/python-publish.yml/badge.svg)](https://github.com/excalibur-kvrv/m3u8-dl/actions/workflows/python-publish.yml)
 [![Downloads](https://pepy.tech/badge/m3u8dl)](https://pepy.tech/project/m3u8dl)
 
-a CLI program to download videos in a m3u8 playlist, write it to a single video file and convert it to mp4 using ffmpeg. Read about m3u8 here https://en.wikipedia.org/wiki/M3U#M3U8
+A CLI program to download a video played using a m3u8 playlist. Read about m3u8 here https://en.wikipedia.org/wiki/M3U#M3U8
 
 ## Dependencies
 - Install python external modules using `pip install -r requirements.txt` after activating virtualenv.
@@ -25,8 +25,8 @@ a CLI program to download videos in a m3u8 playlist, write it to a single video 
 - start the script using `python -m m3u8dl <url of playlist>`.
 
 ### Setup with Docker
-- build docker image using `docker build -t m3u8dl:0.5 .`
-- start container `docker run -d -it --entrypoint='bash' --name m3u8dl-app m3u8dl:0.5` 
+- build docker image using `docker build -t m3u8dl:0.5.0 .`
+- start container `docker run -d -it --entrypoint='bash' --name m3u8dl-app m3u8dl:0.5.0` 
 - go into container terminal `docker exec -it m3u8dl-app bash`
 
 ## Installing/Uninstalling
@@ -40,6 +40,7 @@ a CLI program to download videos in a m3u8 playlist, write it to a single video 
 - run `pip uninstall m3u8dl`
 
 ### Installation in ubuntu using PyInstaller:-
+- install pyinstaller using `pip install PyInstaller`
 - activate virtualenv using `source venv/bin/activate`
 - run `pyinstaller main.py --name m3u8-dl --onefile -p venv/lib/python3.6/site-packages/
 ` in terminal.
