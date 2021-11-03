@@ -26,8 +26,8 @@ A CLI program to download a video played using a m3u8 playlist. Read about m3u8 
 
 ### Setup with Docker
 #### Re-build docker image
-- build docker image using `docker build -t m3u8dl:0.5.1 .`
-- start container `docker run -d -it --name m3u8dl-app m3u8dl:0.5.1` 
+- build docker image using `docker build -t m3u8dl-img .`
+- start container `docker run -d -it --name m3u8dl-app m3u8dl-img` 
 - attach to container via terminal `docker exec -it m3u8dl-app bash`
 - start the script using `python3 -m m3u8dl <url of playlist>`.
 
@@ -41,8 +41,8 @@ A CLI program to download a video played using a m3u8 playlist. Read about m3u8 
 ## Installing/Uninstalling Globally
 ### Installation and usage using pip:-
 - ensure ffmpeg is installed see dependecies section
-- visit PyPI https://pypi.org/project/m3u8dl/0.5.0/ or install using below commands.
-- run `pip install m3u8dl==0.5.1`
+- visit PyPI https://pypi.org/project/m3u8dl/0.5.2/ or install using below commands.
+- run `pip install m3u8dl`
 - run the program now using `m3u8-dl <url-of-playlist>`
 
 ### Uninstalling using pip:-

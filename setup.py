@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 DESCRIPTION = 'm3u8 playlist downloader'
-VERSION = "0.5.0"
+VERSION = "0.5.2"
 
 
 with open("README.md") as fh:
